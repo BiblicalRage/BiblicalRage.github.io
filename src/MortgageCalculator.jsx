@@ -317,6 +317,9 @@ const MortgageCalculator = ({
   showAmortization, setShowAmortization,
   showAllMonths, setShowAllMonths
 }) => {
+  // Add state for payment breakdown analytics
+  const [showPaymentBreakdown, setShowPaymentBreakdown] = useState(false);
+
   // Keep down payment and percent in sync
   const handleHomePriceChange = (value) => {
     setHomePrice(value);
@@ -949,53 +952,6 @@ const MortgageCalculator = ({
               <div className="text-5xl font-extrabold text-[var(--color-primary)] mb-2 tracking-tight">{formatCurrency(totalMonthly)}</div>
               <div className="text-xs text-slate-400">(Estimates only. Actual payment may vary.)</div>
             </div>
-            {/* Pie Chart */}
-            <div className="bg-slate-50 rounded-2xl shadow p-4 flex flex-col items-center border border-slate-100">
-              <ResponsiveContainer width="100%" height={180}>
-                <PieChart>
-                  <Pie
-                    data={breakdownData.filter(d => d.value > 0)}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={80}
-                    paddingAngle={2}
-                  >
-                    {breakdownData.filter(d => d.value > 0).map((entry, idx) => (
-                      <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-              {/* Pie Chart Legend with Values */}
-              <div className="w-full mt-4 flex flex-col gap-2">
-                {breakdownData.filter(d => d.value > 0).map((entry, idx) => (
-                  <div key={entry.name} className="flex flex-row items-center px-2 text-base text-slate-700 w-full">
-                    <div className="flex flex-row items-center gap-2 min-w-0 flex-1">
-                      <span className="inline-block w-4 h-4 rounded-full" style={{ background: COLORS[idx % COLORS.length], border: '2px solid #fff', boxShadow: '0 0 0 1.5px ' + COLORS[idx % COLORS.length] }}></span>
-                      <span className="truncate">{entry.name}</span>
-                    </div>
-                    <span className="font-semibold whitespace-nowrap ml-4">{formatCurrency(entry.value)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* Key Stats Card */}
-            <div className="bg-slate-50 rounded-2xl shadow p-4 border border-slate-100 flex flex-col gap-2">
-              <h4 className="text-base font-semibold text-slate-700 mb-2">Key Stats</h4>
-              <div className="flex flex-col gap-1 text-slate-700 text-base">
-                <div className="flex justify-between"><span>Total interest paid:</span><span className="font-semibold">{formatCurrency(totalInterest)}</span></div>
-                <div className="flex justify-between"><span>Loan payoff time:</span><span className="font-semibold">{payoffMonth} months</span></div>
-                {interestSaved > 0 && (
-                  <div className="flex justify-between text-green-700"><span>Interest saved (with extra payment):</span><span className="font-semibold">{formatCurrency(interestSaved)}</span></div>
-                )}
-                {monthsSaved > 0 && (
-                  <div className="flex justify-between text-green-700"><span>Months saved (with extra payment):</span><span className="font-semibold">{monthsSaved}</span></div>
-                )}
-              </div>
-            </div>
             {/* Debt-to-Income Analysis */}
             <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
               <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-1">
@@ -1045,24 +1001,99 @@ const MortgageCalculator = ({
               <div className="text-xs text-slate-600 bg-slate-100 rounded p-2">
                 <strong>Disclaimer:</strong> This is an estimate based on your inputs only. Actual pre-approval depends on credit score, employment history, down payment, and other factors. Consult with a qualified lender for accurate pre-approval.
               </div>
-            </div>
 
-            {/* DTI Guidelines */}
-            <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-              <h4 className="font-semibold text-blue-800 mb-2">DTI Guidelines</h4>
-              <div className="text-sm text-blue-700 space-y-1">
-                <p><strong>Conventional Loans (Fannie Mae/Freddie Mac):</strong></p>
-                <ul className="list-disc list-inside ml-2 space-y-1">
-                  <li>Front-end DTI: ≤28% (housing expenses)</li>
-                  <li>Back-end DTI: ≤36% (total debt)</li>
-                  <li>Back-end DTI may allow up to 50% with compensating factors</li>
-                </ul>
-                <p className="mt-2"><strong>FHA Loans:</strong></p>
-                <ul className="list-disc list-inside ml-2 space-y-1">
-                  <li>Front-end DTI: ≤31% (housing expenses)</li>
-                  <li>Back-end DTI: ≤43% (total debt)</li>
-                  <li>May allow higher DTI with compensating factors</li>
-                </ul>
+              {/* DTI Guidelines - Now as a dropdown inside the DTI Analysis section */}
+              <div className="mt-4">
+                <button
+                  onClick={() => setShowDTI(!showDTI)}
+                  className="w-full text-left transition duration-200 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 shadow-none flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200"
+                >
+                  <span className="text-blue-800">DTI Guidelines</span>
+                  <svg
+                    className={`w-5 h-5 text-blue-600 transition-transform ${showDTI ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {showDTI && (
+                  <div className="mt-3 bg-blue-50 rounded-lg p-4 border border-blue-200">
+                    <div className="text-sm text-blue-700 space-y-1">
+                      <p><strong>Conventional Loans (Fannie Mae/Freddie Mac):</strong></p>
+                      <ul className="list-disc list-inside ml-2 space-y-1">
+                        <li>Front-end DTI: ≤28% (housing expenses)</li>
+                        <li>Back-end DTI: ≤36% (total debt)</li>
+                        <li>Back-end DTI may allow up to 50% with compensating factors</li>
+                      </ul>
+                      <p className="mt-2"><strong>FHA Loans:</strong></p>
+                      <ul className="list-disc list-inside ml-2 space-y-1">
+                        <li>Front-end DTI: ≤31% (housing expenses)</li>
+                        <li>Back-end DTI: ≤43% (total debt)</li>
+                        <li>May allow higher DTI with compensating factors</li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Payment Breakdown Analytics - Now as a dropdown inside the DTI Analysis section */}
+              <div className="mt-4">
+                <button
+                  onClick={() => setShowPaymentBreakdown(!showPaymentBreakdown)}
+                  className="w-full text-left transition duration-200 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 shadow-none flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200"
+                >
+                  <span className="text-green-800">Payment Breakdown Analytics</span>
+                  <svg
+                    className={`w-5 h-5 text-green-600 transition-transform ${showPaymentBreakdown ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {showPaymentBreakdown && (
+                  <div className="mt-3 bg-green-50 rounded-lg p-4 border border-green-200">
+                    <div className="flex flex-col items-center">
+                      <ResponsiveContainer width="100%" height={180}>
+                        <PieChart>
+                          <Pie
+                            data={breakdownData.filter(d => d.value > 0)}
+                            dataKey="value"
+                            nameKey="name"
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={50}
+                            outerRadius={80}
+                            paddingAngle={2}
+                          >
+                            {breakdownData.filter(d => d.value > 0).map((entry, idx) => (
+                              <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
+                            ))}
+                          </Pie>
+                        </PieChart>
+                      </ResponsiveContainer>
+                      {/* Pie Chart Legend with Values */}
+                      <div className="w-full mt-4 flex flex-col gap-2">
+                        {breakdownData.filter(d => d.value > 0).map((entry, idx) => (
+                          <div key={entry.name} className="flex flex-row items-center px-2 text-base text-slate-700 w-full">
+                            <div className="flex flex-row items-center gap-2 min-w-0 flex-1">
+                              <span className="inline-block w-4 h-4 rounded-full" style={{ background: COLORS[idx % COLORS.length], border: '2px solid #fff', boxShadow: '0 0 0 1.5px ' + COLORS[idx % COLORS.length] }}></span>
+                              <span className="truncate">{entry.name}</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold whitespace-nowrap ml-4">{formatCurrency(entry.value)}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -1077,6 +1108,22 @@ const MortgageCalculator = ({
                 <span className="text-slate-500 ml-2">/month</span>
               </div>
             </div>
+
+            {/* Key Stats Card - Moved to be just below Additional Payments */}
+            <div className="bg-slate-50 rounded-2xl shadow p-4 border border-slate-100 flex flex-col gap-2">
+              <h4 className="text-base font-semibold text-slate-700 mb-2">Key Stats</h4>
+              <div className="flex flex-col gap-1 text-slate-700 text-base">
+                <div className="flex justify-between"><span>Total interest paid:</span><span className="font-semibold">{formatCurrency(totalInterest)}</span></div>
+                <div className="flex justify-between"><span>Loan payoff time:</span><span className="font-semibold">{payoffMonth} months</span></div>
+                {interestSaved > 0 && (
+                  <div className="flex justify-between text-green-700"><span>Interest saved (with extra payment):</span><span className="font-semibold">{formatCurrency(interestSaved)}</span></div>
+                )}
+                {monthsSaved > 0 && (
+                  <div className="flex justify-between text-green-700"><span>Months saved (with extra payment):</span><span className="font-semibold">{monthsSaved}</span></div>
+                )}
+              </div>
+            </div>
+
             {/* Amortization Schedule */}
             <div className="bg-white rounded-2xl shadow p-4 border border-slate-100">
               <button

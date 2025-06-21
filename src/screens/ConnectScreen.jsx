@@ -33,50 +33,13 @@ const ConnectScreen = ({
             <h2 className="text-xl font-bold mb-4 text-center">Who would you like to connect with?</h2>
             <button
               onClick={() => setSelectedProfessionalType('lender')}
-              style={{
-                width: '100%',
-                marginBottom: '1rem',
-                borderRadius: '18px',
-                padding: '0.55em 1.5em',
-                background: 'var(--color-accent)',
-                color: '#fff',
-                fontWeight: 600,
-                fontSize: '1.05rem',
-                border: '1.5px solid #000',
-                outline: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 2px 8px 0 rgba(0,0,0,0.08)',
-                transition: 'background 0.15s, transform 0.15s',
-                cursor: 'pointer',
-              }}
-              onMouseOver={e => e.currentTarget.style.background = '#5cb0ec'}
-              onMouseOut={e => e.currentTarget.style.background = 'var(--color-accent)'}
+              className="w-full mb-4 rounded-[18px] py-2 px-6 bg-[var(--color-accent)] text-white font-semibold text-lg border-2 border-black shadow-md transition-all duration-150 hover:bg-[#2d7d8a] hover:transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-300"
             >
               Connect with a Lender
             </button>
             <button
               onClick={() => setSelectedProfessionalType('realtor')}
-              style={{
-                width: '100%',
-                borderRadius: '18px',
-                padding: '0.55em 1.5em',
-                background: 'var(--color-primary)',
-                color: '#fff',
-                fontWeight: 600,
-                fontSize: '1.05rem',
-                border: '1.5px solid #000',
-                outline: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 2px 8px 0 rgba(0,0,0,0.08)',
-                transition: 'background 0.15s, transform 0.15s',
-                cursor: 'pointer',
-              }}
-              onMouseOver={e => e.currentTarget.style.background = '#4693c2'}
-              onMouseOut={e => e.currentTarget.style.background = 'var(--color-primary)'}
+              className="w-full rounded-[18px] py-2 px-6 bg-[var(--color-primary)] text-white font-semibold text-lg border-2 border-black shadow-md transition-all duration-150 hover:bg-[#4693c2] hover:transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-300"
             >
               Connect with a Realtor
             </button>
