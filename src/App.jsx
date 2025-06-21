@@ -29,6 +29,17 @@ const CustomModal = ({ visible, message, onClose }) => {
 const App = () => {
   // Navigation state
   const [currentView, setCurrentView] = useState('home');
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  // Add effect to handle window resize
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Modal state
   const [showModal, setShowModal] = useState(false);
@@ -344,10 +355,51 @@ const App = () => {
             }}
           >
             {[
-              { key: 'home', label: 'Home' },
-              { key: 'documents', label: 'Documents Required' },
-              { key: 'mortgage101', label: 'Mortgage 101' },
-              { key: 'connect', label: 'Connect' },
+              { 
+                key: 'home', 
+                label: 'Home',
+                icon: (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <polyline points="9,22 9,12 15,12 15,22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )
+              },
+              { 
+                key: 'documents', 
+                label: 'Documents Required',
+                icon: (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <polyline points="14,2 14,8 20,8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <polyline points="10,9 9,9 8,9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )
+              },
+              { 
+                key: 'mortgage101', 
+                label: 'Mortgage 101',
+                icon: (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )
+              },
+              { 
+                key: 'connect', 
+                label: 'Connect',
+                icon: (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )
+              },
             ].map((tab, index) => (
               <button
                 key={tab.key}
@@ -356,7 +408,7 @@ const App = () => {
                 }
                 style={{
                   borderRadius: '18px',
-                  padding: '0.55em 1.5em',
+                  padding: isMobile ? '0.75em' : '0.55em 1.5em',
                   background: 'linear-gradient(90deg, #80dac1 0%, #5cb0ec 100%)',
                   color: '#fff',
                   boxShadow: currentView === tab.key ? '0 2px 8px 0 rgba(0,0,0,0.08)' : 'none',
@@ -367,13 +419,15 @@ const App = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 600,
-                  fontSize: '1.05rem',
+                  fontSize: isMobile ? '1rem' : '1.05rem',
                   transition: 'transform 0.15s',
                   whiteSpace: 'nowrap',
+                  minWidth: isMobile ? '44px' : 'auto',
+                  minHeight: isMobile ? '44px' : 'auto',
                 }}
                 onClick={() => setCurrentView(tab.key)}
               >
-                {tab.label}
+                {isMobile ? tab.icon : tab.label}
               </button>
             ))}
           </div>
