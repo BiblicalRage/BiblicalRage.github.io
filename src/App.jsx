@@ -313,26 +313,6 @@ const App = () => {
               }}>Key</span>
             </h1>
           </div>
-          <button
-            onClick={() => signOut(auth)}
-            style={{
-              position: 'absolute',
-              right: 0,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              padding: '8px 24px',
-              background: '#fff',
-              color: '#5cb0ec',
-              fontWeight: 600,
-              borderRadius: 8,
-              boxShadow: '0 2px 8px 0 rgba(0,0,0,0.06)',
-              border: '1px solid #e2e8f0',
-              transition: 'background 0.2s, box-shadow 0.2s',
-              height: 40
-            }}
-          >
-            Log Out
-          </button>
         </div>
       </header>
 

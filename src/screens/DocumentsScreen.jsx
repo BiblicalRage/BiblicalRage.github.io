@@ -124,7 +124,13 @@ const DocumentsScreen = ({
           </p>
           <button
             className="w-full bg-gradient-to-r from-red-500 to-red-400 text-white rounded-xl py-3 font-semibold shadow hover:from-red-600 hover:to-red-500 transition text-lg"
-            onClick={() => signOut(auth)}
+            onClick={async () => {
+              try {
+                await signOut(auth);
+              } catch (error) {
+                console.error('Error logging out:', error);
+              }
+            }}
           >
             Log out
           </button>
