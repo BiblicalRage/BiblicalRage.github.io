@@ -388,7 +388,7 @@ const App = () => {
                 }
                 style={{
                   borderRadius: '18px',
-                  padding: isMobile ? '0.75em' : '0.55em 1.5em',
+                  padding: (isMobile || false) ? '0.75em' : '0.55em 1.5em',
                   background: 'linear-gradient(90deg, #80dac1 0%, #5cb0ec 100%)',
                   color: '#fff',
                   boxShadow: currentView === tab.key ? '0 2px 8px 0 rgba(0,0,0,0.08)' : 'none',
@@ -399,15 +399,15 @@ const App = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 600,
-                  fontSize: isMobile ? '1rem' : '1.05rem',
+                  fontSize: (isMobile || false) ? '1rem' : '1.05rem',
                   transition: 'transform 0.15s',
                   whiteSpace: 'nowrap',
-                  minWidth: isMobile ? '44px' : 'auto',
-                  minHeight: isMobile ? '44px' : 'auto',
+                  minWidth: (isMobile || false) ? '44px' : 'auto',
+                  minHeight: (isMobile || false) ? '44px' : 'auto',
                 }}
                 onClick={() => setCurrentView(tab.key)}
               >
-                {isMobile ? tab.icon : tab.label}
+                {(isMobile || false) ? tab.icon : tab.label}
               </button>
             ))}
           </div>
