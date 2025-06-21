@@ -54,7 +54,7 @@ const HomeScreen = ({
             onClick={handleSearchForHome}
             className="bg-white text-slate-700 px-6 py-2 rounded-lg font-medium text-base border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-all duration-200"
           >
-            🔍 Search for a Home
+            Search for a Home
           </button>
         </div>
       </div>
