@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import firstKeyLogo from './assets/FirstKey.png';
 import HomeScreen from './screens/HomeScreen.jsx';
 import DocumentsScreen from './screens/DocumentsScreen.jsx';
@@ -32,7 +32,7 @@ const App = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   // Add effect to handle window resize
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
@@ -110,7 +110,7 @@ const App = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [onAuthSuccessCallback, setOnAuthSuccessCallback] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setAuthLoading(false);
@@ -135,7 +135,7 @@ const App = () => {
   };
 
   // Always reset selectedProfessionalType when leaving Connect screen
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentView !== 'connect') {
       setSelectedProfessionalType(null);
     }
