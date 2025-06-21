@@ -1,4 +1,6 @@
 import React from 'react';
+import { auth } from '../firebase';
+import { signOut } from 'firebase/auth';
 
 const DocumentsScreen = ({
   uploadedDocuments,
@@ -100,6 +102,35 @@ const DocumentsScreen = ({
         </div>
       </div>
 
+      {/* Login/Logout Section */}
+      {!user ? (
+        <div className="card w-full max-w-lg mb-8 bg-gradient-to-r from-blue-50 to-slate-50 rounded-2xl shadow-md border border-blue-200 p-8">
+          <h2 className="text-xl font-bold mb-4 text-center text-blue-800">Secure Document Access</h2>
+          <p className="text-center text-slate-600 mb-6">
+            Create an account or log in to securely upload and manage your documents.
+          </p>
+          <button
+            className="w-full bg-gradient-to-r from-blue-500 to-blue-400 text-white rounded-xl py-3 font-semibold shadow hover:from-blue-600 hover:to-blue-500 transition text-lg"
+            onClick={() => requireLogin()}
+          >
+            Log in to upload or download documents
+          </button>
+        </div>
+      ) : (
+        <div className="card w-full max-w-lg mb-8 bg-gradient-to-r from-green-50 to-slate-50 rounded-2xl shadow-md border border-green-200 p-8">
+          <h2 className="text-xl font-bold mb-4 text-center text-green-800">Welcome, {user.email}</h2>
+          <p className="text-center text-slate-600 mb-6">
+            You're logged in and can securely upload and manage your documents.
+          </p>
+          <button
+            className="w-full bg-gradient-to-r from-red-500 to-red-400 text-white rounded-xl py-3 font-semibold shadow hover:from-red-600 hover:to-red-500 transition text-lg"
+            onClick={() => signOut(auth)}
+          >
+            Log out
+          </button>
+        </div>
+      )}
+
       <div className="card w-full max-w-lg bg-white/90 rounded-2xl shadow-md border border-slate-200 p-8 mb-8 flex flex-col items-center">
         <h2 className="text-xl font-bold mb-4 text-center">Upload Documents</h2>
         <div className="flex flex-col items-center w-full">
@@ -133,14 +164,9 @@ const DocumentsScreen = ({
                 accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                 disabled
               />
-              <div className="w-full flex flex-col items-center my-6">
-                <button
-                  className="w-full bg-gradient-to-r from-blue-500 to-blue-400 text-white rounded-xl py-2 font-semibold shadow hover:from-blue-600 hover:to-blue-500 transition text-base"
-                  onClick={() => requireLogin()}
-                >
-                  Log in to upload or download documents
-                </button>
-              </div>
+              <p className="text-center text-slate-500 italic text-sm">
+                Please log in above to upload documents
+              </p>
             </>
           )}
         </div>
