@@ -7,6 +7,7 @@ import Mortgage101Screen from './screens/Mortgage101Screen.jsx';
 import AuthScreen from './screens/AuthScreen.jsx';
 import { auth } from './firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import './App.css';
 
 // Custom Modal Component for better user feedback
 const CustomModal = ({ visible, message, onClose }) => {

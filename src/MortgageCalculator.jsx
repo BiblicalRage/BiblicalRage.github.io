@@ -318,7 +318,10 @@ const MortgageCalculator = ({
   showAllMonths, setShowAllMonths
 }) => {
   // Add state for payment breakdown analytics
-  const [showPaymentBreakdown, setShowPaymentBreakdown] = useState(false);
+  // const [showPaymentBreakdown, setShowPaymentBreakdown] = useState(false);
+  
+  // Add state for amortization view toggle (graph vs table)
+  const [showAmortizationGraph, setShowAmortizationGraph] = useState(true);
 
   // Keep down payment and percent in sync
   const handleHomePriceChange = (value) => {
@@ -354,7 +357,8 @@ const MortgageCalculator = ({
   }
   const homeInsurance = (homePrice * (insuranceRate / 100)) / 12;
   const pmi = (downPaymentPct < 20) ? (loanAmount * (pmiRate / 100)) / 12 : 0;
-  const totalMonthly = principalAndInterest + propertyTaxes + homeInsurance + pmi + hoa + Number(extraPayment);
+  const baseMonthly = principalAndInterest + propertyTaxes + homeInsurance + pmi + hoa;
+  const totalMonthly = baseMonthly + Number(extraPayment);
 
   const breakdownData = [
     { name: "Principal & Interest", value: principalAndInterest },
@@ -545,6 +549,8 @@ const MortgageCalculator = ({
 
   // Prepare amortization data for display and chart
   const displaySchedule = showAllMonths ? amortization : amortization.slice(0, 12);
+  
+  // Chart data - keep as months for detailed graph view
   const chartData = baseAmortization.map((month, index) => {
     const extraPaymentMonth = amortization[index] || { balance: 0 };
     return {
@@ -555,6 +561,38 @@ const MortgageCalculator = ({
       principal: month.principal
     };
   });
+  
+  // Create year-based table data for the table view
+  const yearTableData = [];
+  
+  for (let year = 1; year <= Math.ceil(loanTerm); year++) {
+    const monthIndex = (year - 1) * 12;
+    const baseMonth = baseAmortization[monthIndex] || { balance: 0, payment: 0, interest: 0, principal: 0 };
+    const extraPaymentMonth = amortization[monthIndex] || { balance: 0, payment: 0, interest: 0, principal: 0 };
+    
+    // For table data - calculate yearly totals
+    const yearStartMonth = monthIndex;
+    const yearEndMonth = Math.min(monthIndex + 11, baseAmortization.length - 1);
+    
+    let yearlyPayment = 0;
+    let yearlyInterest = 0;
+    let yearlyPrincipal = 0;
+    
+    for (let i = yearStartMonth; i <= yearEndMonth && i < baseAmortization.length; i++) {
+      yearlyPayment += baseAmortization[i].payment;
+      yearlyInterest += baseAmortization[i].interest;
+      yearlyPrincipal += baseAmortization[i].principal;
+    }
+    
+    yearTableData.push({
+      year: year,
+      balance: extraPaymentMonth.balance,
+      payment: yearlyPayment,
+      interest: yearlyInterest,
+      principal: yearlyPrincipal,
+      endBalance: extraPaymentMonth.balance
+    });
+  }
 
   // Calculate DTI when income, debt, or housing expenses change
   useEffect(() => {
@@ -686,7 +724,7 @@ const MortgageCalculator = ({
                       
                       if (preApproval.maxHomePrice <= 0) {
                         return (
-                          <div className="text-center py-4">
+                          <div className="py-4">
                             <p className="text-red-700 font-medium mb-2">Unable to calculate pre-approval</p>
                             <p className="text-sm text-red-600">
                               {preApproval.reason || 'Your current debt-to-income ratio may be too high for conventional lending. Consider reducing debts or increasing income.'}
@@ -698,7 +736,7 @@ const MortgageCalculator = ({
                       return (
                         <div className="space-y-3">
                           <div className="bg-white rounded-lg p-4 border border-slate-200">
-                            <div className="text-center">
+                            <div>
                               <span className="text-sm text-slate-600">Likely Pre-Approval Amount</span>
                               <div className="text-2xl font-bold text-slate-800 mt-1">
                                 {formatCurrency(preApproval.maxHomePrice)}
@@ -947,21 +985,21 @@ const MortgageCalculator = ({
           {/* Right: Results */}
           <div className="w-full flex flex-col gap-4 md:gap-6">
             {/* Estimated Payment */}
-            <div className="bg-white rounded-2xl shadow p-6 flex flex-col items-center border border-slate-100">
+            <div className="bg-white rounded-2xl shadow p-6 flex flex-col border border-slate-100">
               <h3 className="text-lg font-semibold text-slate-700 mb-2 tracking-tight">Estimated Monthly Payment</h3>
-              <div className="text-5xl font-extrabold text-[var(--color-primary)] mb-2 tracking-tight">{formatCurrency(totalMonthly)}</div>
+              <div className="text-5xl font-extrabold text-[var(--color-primary)] mb-2 tracking-tight">{formatCurrency(baseMonthly)}</div>
               <div className="text-xs text-slate-400">(Estimates only. Actual payment may vary.)</div>
             </div>
             {/* Debt-to-Income Analysis */}
             <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
               <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-1">
-                Debt-to-Income Analysis
+                Debt-to-Income Analysis - UPDATED
                 <InfoTooltip text="Based on Fannie Mae and Freddie Mac guidelines. Front-end DTI (housing expenses) should be ≤28% and back-end DTI (total debt) should be ≤36% for conventional loans." />
               </h4>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="bg-white rounded-lg p-3 border border-slate-200">
-                  <div className="text-center mb-2">
+                  <div className="mb-2">
                     <span className="text-sm text-slate-600">Front-end DTI</span>
                     <div className="text-lg font-bold text-slate-800">
                       {monthlyIncome > 0 ? `${frontEndDTI.toFixed(1)}%` : 'N/A'}
@@ -971,7 +1009,7 @@ const MortgageCalculator = ({
                 </div>
                 
                 <div className="bg-white rounded-lg p-3 border border-slate-200">
-                  <div className="text-center mb-2">
+                  <div className="mb-2">
                     <span className="text-sm text-slate-600">Back-end DTI</span>
                     <div className="text-lg font-bold text-slate-800">
                       {backEndDTI.toFixed(1)}%
@@ -986,7 +1024,17 @@ const MortgageCalculator = ({
                 <span className="font-semibold">{formatCurrency(monthlyIncome)}</span>
               </div>
               <div className="flex justify-between items-center mb-3">
-                <span className="text-sm text-slate-600">New Mortgage Payment:</span>
+                <span className="text-sm text-slate-600">Base Mortgage Payment:</span>
+                <span className="font-semibold">{formatCurrency(baseMonthly)}</span>
+              </div>
+              {extraPayment > 0 && (
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-sm text-slate-600">Extra Payment:</span>
+                  <span className="font-semibold">{formatCurrency(extraPayment)}</span>
+                </div>
+              )}
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-sm text-slate-600">Total Mortgage Payment:</span>
                 <span className="font-semibold">{formatCurrency(totalMonthly)}</span>
               </div>
               <div className="flex justify-between items-center mb-3">
@@ -1006,11 +1054,11 @@ const MortgageCalculator = ({
               <div className="mt-4">
                 <button
                   onClick={() => setShowDTI(!showDTI)}
-                  className="w-full text-left transition duration-200 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 shadow-none flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200"
+                  className="w-full text-left transition duration-200 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-slate-200 shadow-none flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200"
                 >
-                  <span className="text-blue-800">DTI Guidelines</span>
+                  <span className="text-slate-700">DTI Guidelines</span>
                   <svg
-                    className={`w-5 h-5 text-blue-600 transition-transform ${showDTI ? 'rotate-180' : ''}`}
+                    className={`w-5 h-5 text-slate-600 transition-transform ${showDTI ? 'rotate-180' : ''}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -1020,8 +1068,8 @@ const MortgageCalculator = ({
                 </button>
                 
                 {showDTI && (
-                  <div className="mt-3 bg-blue-50 rounded-lg p-4 border border-blue-200">
-                    <div className="text-sm text-blue-700 space-y-1">
+                  <div className="mt-3 bg-slate-50 rounded-lg p-4 border border-slate-200">
+                    <div className="text-sm text-slate-700 space-y-1">
                       <p><strong>Conventional Loans (Fannie Mae/Freddie Mac):</strong></p>
                       <ul className="list-disc list-inside ml-2 space-y-1">
                         <li>Front-end DTI: ≤28% (housing expenses)</li>
@@ -1039,61 +1087,59 @@ const MortgageCalculator = ({
                 )}
               </div>
 
-              {/* Payment Breakdown Analytics - Now as a dropdown inside the DTI Analysis section */}
-              <div className="mt-4">
-                <button
-                  onClick={() => setShowPaymentBreakdown(!showPaymentBreakdown)}
-                  className="w-full text-left transition duration-200 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 shadow-none flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200"
-                >
-                  <span className="text-green-800">Payment Breakdown Analytics</span>
-                  <svg
-                    className={`w-5 h-5 text-green-600 transition-transform ${showPaymentBreakdown ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
+              {/* Payment Breakdown Analytics - Now as a visible pie chart */}
+              <div className="mt-4 bg-white rounded-lg p-4 border border-slate-200">
+                <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-1">
+                  Payment Breakdown
+                  <InfoTooltip text="Visual breakdown of your monthly mortgage payment showing how much goes to principal & interest, taxes, insurance, and other costs." />
+                </h4>
                 
-                {showPaymentBreakdown && (
-                  <div className="mt-3 bg-green-50 rounded-lg p-4 border border-green-200">
-                    <div className="flex flex-col items-center">
-                      <ResponsiveContainer width="100%" height={180}>
-                        <PieChart>
-                          <Pie
-                            data={breakdownData.filter(d => d.value > 0)}
-                            dataKey="value"
-                            nameKey="name"
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={50}
-                            outerRadius={80}
-                            paddingAngle={2}
-                          >
-                            {breakdownData.filter(d => d.value > 0).map((entry, idx) => (
-                              <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
-                            ))}
-                          </Pie>
-                        </PieChart>
-                      </ResponsiveContainer>
-                      {/* Pie Chart Legend with Values */}
-                      <div className="w-full mt-4 flex flex-col gap-2">
-                        {breakdownData.filter(d => d.value > 0).map((entry, idx) => (
-                          <div key={entry.name} className="flex flex-row items-center px-2 text-base text-slate-700 w-full">
-                            <div className="flex flex-row items-center gap-2 min-w-0 flex-1">
-                              <span className="inline-block w-4 h-4 rounded-full" style={{ background: COLORS[idx % COLORS.length], border: '2px solid #fff', boxShadow: '0 0 0 1.5px ' + COLORS[idx % COLORS.length] }}></span>
-                              <span className="truncate">{entry.name}</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                              <span className="font-semibold whitespace-nowrap ml-4">{formatCurrency(entry.value)}</span>
-                            </div>
+                <div className="flex flex-col lg:flex-row gap-4">
+                  {/* Pie Chart */}
+                  <div className="w-full lg:w-1/2">
+                    <ResponsiveContainer width="100%" height={200}>
+                      <PieChart>
+                        <Pie
+                          data={breakdownData.filter(item => item.value > 0)}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={40}
+                          outerRadius={80}
+                          paddingAngle={2}
+                          dataKey="value"
+                        >
+                          {breakdownData.filter(item => item.value > 0).map((entry, index) => (
+                            <Cell 
+                              key={`cell-${index}`} 
+                              fill={['#0077b6', '#6d28d9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'][index % 6]} 
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip formatter={(value) => formatCurrency(value)} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  
+                  {/* Legend */}
+                  <div className="w-full lg:w-1/2">
+                    <div className="space-y-2">
+                      {breakdownData.filter(item => item.value > 0).map((item, index) => (
+                        <div key={item.name} className="flex items-center justify-between text-sm">
+                          <div className="flex items-center gap-2">
+                            <div 
+                              className="w-3 h-3 rounded-full" 
+                              style={{ 
+                                backgroundColor: ['#0077b6', '#6d28d9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'][index % 6] 
+                              }}
+                            ></div>
+                            <span className="text-slate-700">{item.name}</span>
                           </div>
-                        ))}
-                      </div>
+                          <span className="font-semibold text-slate-800">{formatCurrency(item.value)}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                )}
+                </div>
               </div>
             </div>
 
@@ -1126,33 +1172,34 @@ const MortgageCalculator = ({
 
             {/* Amortization Schedule */}
             <div className="bg-white rounded-2xl shadow p-4 border border-slate-100">
-              <button
-                onClick={() => setShowAmortization(!showAmortization)}
-                className="w-full text-left mb-4 transition duration-200 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-none flex items-center justify-center relative"
-                style={{
-                  borderRadius: '18px',
-                  padding: '0.75em 1.5em',
-                  background: 'linear-gradient(90deg, #80dac1 0%, #5cb0ec 100%)',
-                  color: '#fff',
-                  boxShadow: '0 2px 8px 0 rgba(0,0,0,0.08)',
-                  margin: 0,
-                  border: '1.5px solid #000',
-                  outline: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 600,
-                  fontSize: '1.05rem',
-                  transition: 'transform 0.15s',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                Amortization Schedule
-              </button>
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="font-semibold text-slate-800 flex items-center gap-1">
+                  Amortization Schedule
+                  <InfoTooltip text="View your loan balance over time and detailed payment breakdown. Toggle between graph and table view." />
+                </h4>
+                
+                {/* Toggle Switch */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-slate-600">Graph</span>
+                  <button
+                    onClick={() => setShowAmortizationGraph(!showAmortizationGraph)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                      showAmortizationGraph ? 'bg-blue-600' : 'bg-slate-200'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        showAmortizationGraph ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                  <span className="text-sm text-slate-600">Table</span>
+                </div>
+              </div>
               
-              {showAmortization && (
-                <div className="space-y-4">
-                  {/* Balance Chart */}
+              <div className="space-y-4">
+                {/* Graph View */}
+                {showAmortizationGraph && (
                   <div className="bg-slate-50 rounded-lg p-4">
                     <h5 className="text-sm font-semibold text-slate-700 mb-2">Loan Balance Over Time</h5>
                     <ResponsiveContainer width="100%" height={200}>
@@ -1188,59 +1235,58 @@ const MortgageCalculator = ({
                       </div>
                     </div>
                   </div>
-                  
-                  {/* Schedule Table */}
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-xs text-slate-700 border border-slate-200 rounded-lg overflow-hidden">
-                      <thead>
-                        <tr className="bg-slate-50 border-b border-slate-200">
-                          <th className="text-left py-2 px-2 font-semibold text-slate-800 w-16">Month</th>
-                          <th className="text-right py-2 px-2 font-semibold text-slate-800 w-24">Balance</th>
-                          <th className="text-right py-2 px-2 font-semibold text-slate-800 w-20">Payment</th>
-                          <th className="text-right py-2 px-2 font-semibold text-slate-800 w-20">Interest</th>
-                          <th className="text-right py-2 px-2 font-semibold text-slate-800 w-20">Principal</th>
-                          <th className="text-right py-2 px-2 font-semibold text-slate-800 w-24">End Balance</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {displaySchedule.map((month, index) => (
-                          <tr key={index} className={`border-b border-slate-100 hover:bg-slate-50 transition-colors ${
-                            month.month % 12 === 0 ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
-                          }`}>
-                            <td className={`py-2 px-2 font-medium ${
-                              month.month % 12 === 0 ? 'text-blue-700 font-semibold' : 'text-slate-700'
-                            }`}>
-                              {month.month}
-                              {month.month % 12 === 0 && (
-                                <span className="ml-1 text-xs text-blue-600 font-normal">
-                                  (Y{Math.floor(month.month / 12)})
-                                </span>
-                              )}
-                            </td>
-                            <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(month.balance + month.principal)}</td>
-                            <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(month.payment)}</td>
-                            <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(month.interest)}</td>
-                            <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(month.principal)}</td>
-                            <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(month.balance)}</td>
+                )}
+                
+                {/* Table View */}
+                {!showAmortizationGraph && (
+                  <div className="space-y-4">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-xs text-slate-700 border border-slate-200 rounded-lg overflow-hidden">
+                        <thead>
+                          <tr className="bg-slate-50 border-b border-slate-200">
+                            <th className="text-left py-2 px-2 font-semibold text-slate-800 w-16">Year</th>
+                            <th className="text-right py-2 px-2 font-semibold text-slate-800 w-24">Balance</th>
+                            <th className="text-right py-2 px-2 font-semibold text-slate-800 w-20">Payment</th>
+                            <th className="text-right py-2 px-2 font-semibold text-slate-800 w-20">Interest</th>
+                            <th className="text-right py-2 px-2 font-semibold text-slate-800 w-20">Principal</th>
+                            <th className="text-right py-2 px-2 font-semibold text-slate-800 w-24">End Balance</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  
-                  {/* Show More/Less Button */}
-                  {amortization.length > 12 && (
-                    <div className="text-center">
-                      <button
-                        onClick={() => setShowAllMonths(!showAllMonths)}
-                        className="text-sm text-blue-600 hover:text-blue-800 underline"
-                      >
-                        {showAllMonths ? 'Show First 12 Months' : `Show All ${amortization.length} Months`}
-                      </button>
+                        </thead>
+                        <tbody>
+                          {(showAllMonths ? yearTableData : yearTableData.slice(0, 5)).map((year, index) => (
+                            <tr key={index} className={`border-b border-slate-100 hover:bg-slate-50 transition-colors ${
+                              index % 12 === 0 ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+                            }`}>
+                              <td className={`py-2 px-2 font-medium ${
+                                index % 12 === 0 ? 'text-blue-700 font-semibold' : 'text-slate-700'
+                              }`}>
+                                {year.year}
+                              </td>
+                              <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(year.balance)}</td>
+                              <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(year.payment)}</td>
+                              <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(year.interest)}</td>
+                              <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(year.principal)}</td>
+                              <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(year.endBalance)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                  )}
-                </div>
-              )}
+                    
+                    {/* Show More/Less Button */}
+                    {yearTableData.length > 5 && (
+                      <div className="text-center">
+                        <button
+                          onClick={() => setShowAllMonths(!showAllMonths)}
+                          className="text-sm text-blue-600 hover:text-blue-800 underline"
+                        >
+                          {showAllMonths ? 'Show First 5 Years' : `Show All ${yearTableData.length} Years`}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
