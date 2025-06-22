@@ -6,7 +6,7 @@ import ConnectScreen from './screens/ConnectScreen.jsx';
 import Mortgage101Screen from './screens/Mortgage101Screen.jsx';
 import AuthScreen from './screens/AuthScreen.jsx';
 import { auth } from './firebase';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import './App.css';
 
 // Custom Modal Component for better user feedback
@@ -239,14 +239,6 @@ const App = () => {
   };
   const sendConnectionEmail = async (professionalName) => {
     setIsLoading(true);
-    let emailContent = `Connection request from FirstKey user.\n\n`;
-    emailContent += `Homebuyer Progress Details (from Calculator - simulated data):\n`;
-    emailContent += `- Estimated Monthly Income: $${1234.56}\n`;
-    emailContent += `- Estimated Total Monthly Debt: $${789.01}\n`;
-    emailContent += `- Estimated Desired Home Price: $${250000.00}\n`;
-    if (optionalMessage) {
-      emailContent += `\nUser's Personalized Message:\n"${optionalMessage}"\n`;
-    }
     let attachmentStatus = "No documents were attached.";
     if (shareDocumentsWithLender && consentToEmailDocuments && uploadedDocuments.length > 0) {
       attachmentStatus = `A compiled zip file containing ${uploadedDocuments.length} document(s) is being prepared and will be attached.`;
@@ -344,7 +336,7 @@ const App = () => {
               paddingRight: '1rem',
             }}
           >
-            {navigationTabs.map((tab, index) => {
+            {navigationTabs.map((tab) => {
               return (
                 <button
                   key={tab.key}
@@ -382,8 +374,6 @@ const App = () => {
       <main className="flex-grow max-w-7xl w-full mx-auto px-4 py-6">
         {currentView === 'home' && (
           <HomeScreen
-            showCustomModal={showCustomModal}
-            setCurrentView={setCurrentView}
             // Mortgage Calculator state
             homePrice={homePrice}
             setHomePrice={setHomePrice}

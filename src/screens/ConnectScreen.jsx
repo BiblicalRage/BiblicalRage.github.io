@@ -16,8 +16,7 @@ const ConnectScreen = ({
   optionalMessage,
   setOptionalMessage,
   handleDownloadDocuments, // function from App to download docs
-  sendConnectionEmail, // function from App to send email
-  showCustomModal // Function to show modals
+  sendConnectionEmail // function from App to send email
 }) => {
   return (
     <div className="section flex flex-col items-center">

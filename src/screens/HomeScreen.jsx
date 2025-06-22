@@ -3,8 +3,6 @@ import MortgageCalculator from '../MortgageCalculator.jsx'; // Adjust path if ne
 
 // HomeScreen component receives props from App.jsx
 const HomeScreen = ({ 
-  showCustomModal, 
-  setCurrentView,
   // Mortgage Calculator state
   homePrice, setHomePrice,
   downPayment, setDownPayment,

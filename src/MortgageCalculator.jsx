@@ -28,11 +28,6 @@ const formatCurrency = (amount) => {
   }).format(amount);
 };
 
-// Helper function to format percentage
-const formatPercentage = (value) => {
-  return `${value.toFixed(2)}%`;
-};
-
 // Helper function to format tax rate to max 5 decimal places
 const formatTaxRate = (value) => {
   return Number(value).toFixed(5).replace(/\.?0+$/, '');
