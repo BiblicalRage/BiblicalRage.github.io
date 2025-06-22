@@ -33,7 +33,8 @@ const HomeScreen = ({
   backEndDTI, setBackEndDTI,
   activeTab, setActiveTab,
   showAmortization, setShowAmortization,
-  showAllMonths, setShowAllMonths
+  showAllMonths, setShowAllMonths,
+  amortizationView, setAmortizationView
 }) => {
   const handleSearchForHome = () => {
     window.open('https://portal.onehome.com/en-US/properties/map?searchId=new-search&token=eyJPU04iOiJOVFIiLCJ0eXBlIjoiMSIsInNldGlkIjoiNDY0MjUxNCIsInNldGtleSI6Ijg2MyIsImVtYWlsIjoiamVmZl9sZXZlc3F1ZUByb2NrZXRtYWlsLmNvbSIsInJlc291cmNlaWQiOjAsImFnZW50aWQiOjExMTA3NSwiaXNkZWx0YSI6ZmFsc2UsIlZpZXdNb2RlIjoiMSJ9&defaultId=15152313-7125-3ca8-a011-e28f5cf4bc66', '_blank');
@@ -122,6 +123,8 @@ const HomeScreen = ({
           setShowAmortization={setShowAmortization}
           showAllMonths={showAllMonths}
           setShowAllMonths={setShowAllMonths}
+          amortizationView={amortizationView}
+          setAmortizationView={setAmortizationView}
         />
       </div>
     </div>

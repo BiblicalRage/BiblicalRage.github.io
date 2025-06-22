@@ -75,6 +75,7 @@ const App = () => {
   const [activeTab, setActiveTab] = useState('breakdown');
   const [showAmortization, setShowAmortization] = useState(false);
   const [showAllMonths, setShowAllMonths] = useState(false);
+  const [amortizationView, setAmortizationView] = useState('graph'); // 'graph' or 'table'
 
   // Mortgage101 expand/collapse state
   const [whatIsMortgageExpanded, setWhatIsMortgageExpanded] = useState(false);
@@ -443,6 +444,8 @@ const App = () => {
             setShowAmortization={setShowAmortization}
             showAllMonths={showAllMonths}
             setShowAllMonths={setShowAllMonths}
+            amortizationView={amortizationView}
+            setAmortizationView={setAmortizationView}
           />
         )}
         {currentView === 'documents' && (

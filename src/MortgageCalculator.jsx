@@ -315,7 +315,8 @@ const MortgageCalculator = ({
   backEndDTI, setBackEndDTI,
   activeTab, setActiveTab,
   showAmortization, setShowAmortization,
-  showAllMonths, setShowAllMonths
+  showAllMonths, setShowAllMonths,
+  amortizationView, setAmortizationView
 }) => {
   // Keep down payment and percent in sync
   const handleHomePriceChange = (value) => {
@@ -351,7 +352,8 @@ const MortgageCalculator = ({
   }
   const homeInsurance = (homePrice * (insuranceRate / 100)) / 12;
   const pmi = (downPaymentPct < 20) ? (loanAmount * (pmiRate / 100)) / 12 : 0;
-  const totalMonthly = principalAndInterest + propertyTaxes + homeInsurance + pmi + hoa + Number(extraPayment);
+  const requiredMonthlyPayment = principalAndInterest + propertyTaxes + homeInsurance + pmi + hoa;
+  const totalMonthly = requiredMonthlyPayment + Number(extraPayment);
 
   const breakdownData = [
     { name: "Principal & Interest", value: principalAndInterest },
@@ -395,11 +397,11 @@ const MortgageCalculator = ({
   // DTI Calculations
   const calculateDTI = () => {
     if (monthlyIncome > 0) {
-      // Front-end DTI: housing expenses / monthly income
-      const frontEnd = ((housingExpenses + totalMonthly) / monthlyIncome) * 100;
+      // Front-end DTI: required housing payment / monthly income
+      const frontEnd = (requiredMonthlyPayment / monthlyIncome) * 100;
       
-      // Back-end DTI: (housing expenses + other debts) / monthly income
-      const backEnd = ((housingExpenses + totalMonthly + otherDebts) / monthlyIncome) * 100;
+      // Back-end DTI: (required housing payment + other debts) / monthly income
+      const backEnd = ((requiredMonthlyPayment + otherDebts) / monthlyIncome) * 100;
       
       setDtiPercentage(backEnd);
       setFrontEndDTI(frontEnd);
@@ -538,7 +540,9 @@ const MortgageCalculator = ({
     };
   };
 
-  const dtiStatus = getDTIStatus(backEndDTI);
+  // Use pre-approval DTI for display in DTI section
+  const preApproval = calculatePreApproval();
+  const dtiStatus = getDTIStatus(preApproval.actualBackEndDTI);
 
   // Prepare amortization data for display and chart
   const displaySchedule = showAllMonths ? amortization : amortization.slice(0, 12);
@@ -679,8 +683,6 @@ const MortgageCalculator = ({
                     </h4>
                     
                     {(() => {
-                      const preApproval = calculatePreApproval();
-                      
                       if (preApproval.maxHomePrice <= 0) {
                         return (
                           <div className="text-center py-4">
@@ -736,8 +738,8 @@ const MortgageCalculator = ({
             {/* Home Price */}
             <div>
               <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1">
-                Home price
-                <InfoTooltip text="The total price you expect to pay for the home, before any down payment or closing costs." />
+                Desired home price
+                <InfoTooltip text="The total price of the home you want to purchase. This includes the cost of the property itself." />
               </label>
               <div className="flex flex-col md:flex-row items-center gap-3">
                 <input
@@ -982,20 +984,6 @@ const MortgageCalculator = ({
                 ))}
               </div>
             </div>
-            {/* Key Stats Card */}
-            <div className="bg-slate-50 rounded-2xl shadow p-4 border border-slate-100 flex flex-col gap-2">
-              <h4 className="text-base font-semibold text-slate-700 mb-2">Key Stats</h4>
-              <div className="flex flex-col gap-1 text-slate-700 text-base">
-                <div className="flex justify-between"><span>Total interest paid:</span><span className="font-semibold">{formatCurrency(totalInterest)}</span></div>
-                <div className="flex justify-between"><span>Loan payoff time:</span><span className="font-semibold">{payoffMonth} months</span></div>
-                {interestSaved > 0 && (
-                  <div className="flex justify-between text-green-700"><span>Interest saved (with extra payment):</span><span className="font-semibold">{formatCurrency(interestSaved)}</span></div>
-                )}
-                {monthsSaved > 0 && (
-                  <div className="flex justify-between text-green-700"><span>Months saved (with extra payment):</span><span className="font-semibold">{monthsSaved}</span></div>
-                )}
-              </div>
-            </div>
             {/* Debt-to-Income Analysis */}
             <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
               <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-1">
@@ -1008,7 +996,7 @@ const MortgageCalculator = ({
                   <div className="text-center mb-2">
                     <span className="text-sm text-slate-600">Front-end DTI</span>
                     <div className="text-lg font-bold text-slate-800">
-                      {monthlyIncome > 0 ? `${frontEndDTI.toFixed(1)}%` : 'N/A'}
+                      {monthlyIncome > 0 ? `${((requiredMonthlyPayment / monthlyIncome) * 100).toFixed(1)}%` : 'N/A'}
                     </div>
                     <span className="text-xs text-slate-500">(Housing Expenses)</span>
                   </div>
@@ -1018,7 +1006,7 @@ const MortgageCalculator = ({
                   <div className="text-center mb-2">
                     <span className="text-sm text-slate-600">Back-end DTI</span>
                     <div className="text-lg font-bold text-slate-800">
-                      {backEndDTI.toFixed(1)}%
+                      {monthlyIncome > 0 ? `${(((requiredMonthlyPayment + otherDebts) / monthlyIncome) * 100).toFixed(1)}%` : 'N/A'}
                     </div>
                     <span className="text-xs text-slate-500">(Total Debt)</span>
                   </div>
@@ -1030,8 +1018,8 @@ const MortgageCalculator = ({
                 <span className="font-semibold">{formatCurrency(monthlyIncome)}</span>
               </div>
               <div className="flex justify-between items-center mb-3">
-                <span className="text-sm text-slate-600">New Mortgage Payment:</span>
-                <span className="font-semibold">{formatCurrency(totalMonthly)}</span>
+                <span className="text-sm text-slate-600">Required Monthly Payment:</span>
+                <span className="font-semibold">{formatCurrency(requiredMonthlyPayment)}</span>
               </div>
               <div className="flex justify-between items-center mb-3">
                 <span className="text-sm text-slate-600">Other Debts:</span>
@@ -1039,30 +1027,48 @@ const MortgageCalculator = ({
               </div>
               <div className="flex justify-between items-center border-t border-slate-200 pt-2">
                 <span className="text-sm font-semibold text-slate-700">Total Monthly Debt:</span>
-                <span className="font-bold text-slate-800">{formatCurrency(totalMonthly + otherDebts)}</span>
+                <span className="font-bold text-slate-800">{formatCurrency(requiredMonthlyPayment + otherDebts)}</span>
               </div>
 
               <div className="text-xs text-slate-600 bg-slate-100 rounded p-2">
                 <strong>Disclaimer:</strong> This is an estimate based on your inputs only. Actual pre-approval depends on credit score, employment history, down payment, and other factors. Consult with a qualified lender for accurate pre-approval.
               </div>
-            </div>
 
-            {/* DTI Guidelines */}
-            <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-              <h4 className="font-semibold text-blue-800 mb-2">DTI Guidelines</h4>
-              <div className="text-sm text-blue-700 space-y-1">
-                <p><strong>Conventional Loans (Fannie Mae/Freddie Mac):</strong></p>
-                <ul className="list-disc list-inside ml-2 space-y-1">
-                  <li>Front-end DTI: ≤28% (housing expenses)</li>
-                  <li>Back-end DTI: ≤36% (total debt)</li>
-                  <li>Back-end DTI may allow up to 50% with compensating factors</li>
-                </ul>
-                <p className="mt-2"><strong>FHA Loans:</strong></p>
-                <ul className="list-disc list-inside ml-2 space-y-1">
-                  <li>Front-end DTI: ≤31% (housing expenses)</li>
-                  <li>Back-end DTI: ≤43% (total debt)</li>
-                  <li>May allow higher DTI with compensating factors</li>
-                </ul>
+              {/* DTI Guidelines Dropdown */}
+              <div className="mt-4">
+                <button
+                  onClick={() => setShowDTI(!showDTI)}
+                  className="w-full text-left p-3 bg-slate-200 rounded-lg border border-slate-300 hover:bg-slate-300 transition-colors flex items-center justify-between"
+                >
+                  <span className="font-semibold text-slate-700">DTI Guidelines</span>
+                  <svg 
+                    className={`w-5 h-5 text-slate-600 transition-transform ${showDTI ? 'rotate-180' : ''}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {showDTI && (
+                  <div className="mt-2 p-3 bg-slate-100 rounded-lg border border-slate-200">
+                    <div className="text-sm text-slate-700 space-y-1">
+                      <p><strong>Conventional Loans (Fannie Mae/Freddie Mac):</strong></p>
+                      <ul className="list-disc list-inside ml-2 space-y-1">
+                        <li>Front-end DTI: ≤28% (housing expenses)</li>
+                        <li>Back-end DTI: ≤36% (total debt)</li>
+                        <li>Back-end DTI may allow up to 50% with compensating factors</li>
+                      </ul>
+                      <p className="mt-2"><strong>FHA Loans:</strong></p>
+                      <ul className="list-disc list-inside ml-2 space-y-1">
+                        <li>Front-end DTI: ≤31% (housing expenses)</li>
+                        <li>Back-end DTI: ≤43% (total debt)</li>
+                        <li>May allow higher DTI with compensating factors</li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -1077,35 +1083,51 @@ const MortgageCalculator = ({
                 <span className="text-slate-500 ml-2">/month</span>
               </div>
             </div>
+            {/* Key Stats Card */}
+            <div className="bg-slate-50 rounded-2xl shadow p-4 border border-slate-100 flex flex-col gap-2">
+              <h4 className="text-base font-semibold text-slate-700 mb-2">Key Stats</h4>
+              <div className="flex flex-col gap-1 text-slate-700 text-base">
+                <div className="flex justify-between"><span>Total interest paid:</span><span className="font-semibold">{formatCurrency(totalInterest)}</span></div>
+                <div className="flex justify-between"><span>Loan payoff time:</span><span className="font-semibold">{payoffMonth} months</span></div>
+                {interestSaved > 0 && (
+                  <div className="flex justify-between text-green-700"><span>Interest saved (with extra payment):</span><span className="font-semibold">{formatCurrency(interestSaved)}</span></div>
+                )}
+                {monthsSaved > 0 && (
+                  <div className="flex justify-between text-green-700"><span>Months saved (with extra payment):</span><span className="font-semibold">{monthsSaved}</span></div>
+                )}
+              </div>
+            </div>
             {/* Amortization Schedule */}
             <div className="bg-white rounded-2xl shadow p-4 border border-slate-100">
-              <button
-                onClick={() => setShowAmortization(!showAmortization)}
-                className="w-full text-left mb-4 transition duration-200 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-none flex items-center justify-center relative"
-                style={{
-                  borderRadius: '18px',
-                  padding: '0.75em 1.5em',
-                  background: 'linear-gradient(90deg, #80dac1 0%, #5cb0ec 100%)',
-                  color: '#fff',
-                  boxShadow: '0 2px 8px 0 rgba(0,0,0,0.08)',
-                  margin: 0,
-                  border: '1.5px solid #000',
-                  outline: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 600,
-                  fontSize: '1.05rem',
-                  transition: 'transform 0.15s',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                Amortization Schedule
-              </button>
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-lg font-semibold text-slate-700">Amortization Schedule</h4>
+                <div className="flex items-center bg-slate-100 rounded-lg p-1">
+                  <button
+                    onClick={() => setAmortizationView('graph')}
+                    className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                      amortizationView === 'graph' 
+                        ? 'bg-white text-slate-700 shadow-sm' 
+                        : 'text-slate-500 hover:text-slate-700'
+                    }`}
+                  >
+                    Graph
+                  </button>
+                  <button
+                    onClick={() => setAmortizationView('table')}
+                    className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                      amortizationView === 'table' 
+                        ? 'bg-white text-slate-700 shadow-sm' 
+                        : 'text-slate-500 hover:text-slate-700'
+                    }`}
+                  >
+                    Table
+                  </button>
+                </div>
+              </div>
               
-              {showAmortization && (
-                <div className="space-y-4">
-                  {/* Balance Chart */}
+              <div className="space-y-4">
+                {amortizationView === 'graph' ? (
+                  /* Balance Chart */
                   <div className="bg-slate-50 rounded-lg p-4">
                     <h5 className="text-sm font-semibold text-slate-700 mb-2">Loan Balance Over Time</h5>
                     <ResponsiveContainer width="100%" height={200}>
@@ -1141,8 +1163,8 @@ const MortgageCalculator = ({
                       </div>
                     </div>
                   </div>
-                  
-                  {/* Schedule Table */}
+                ) : (
+                  /* Schedule Table */
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs text-slate-700 border border-slate-200 rounded-lg overflow-hidden">
                       <thead>
@@ -1180,20 +1202,20 @@ const MortgageCalculator = ({
                       </tbody>
                     </table>
                   </div>
-                  
-                  {/* Show More/Less Button */}
-                  {amortization.length > 12 && (
-                    <div className="text-center">
-                      <button
-                        onClick={() => setShowAllMonths(!showAllMonths)}
-                        className="text-sm text-blue-600 hover:text-blue-800 underline"
-                      >
-                        {showAllMonths ? 'Show First 12 Months' : `Show All ${amortization.length} Months`}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
+                )}
+                
+                {/* Show More/Less Button - only for table view */}
+                {amortizationView === 'table' && amortization.length > 12 && (
+                  <div className="text-center">
+                    <button
+                      onClick={() => setShowAllMonths(!showAllMonths)}
+                      className="text-sm text-blue-600 hover:text-blue-800 underline"
+                    >
+                      {showAllMonths ? 'Show First 12 Months' : `Show All ${amortization.length} Months`}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
