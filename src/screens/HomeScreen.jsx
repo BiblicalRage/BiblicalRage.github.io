@@ -42,18 +42,18 @@ const HomeScreen = ({
 
   return (
     <div className="section flex flex-col items-center">
-      <h1 className="text-xl font-medium text-slate-600 mb-8 text-center tracking-wide uppercase">Your Key to Confident Homeownership</h1>
+      <h1 className="text-lg md:text-xl font-medium text-slate-600 mb-6 md:mb-8 text-center tracking-wide uppercase">Your Key to Confident Homeownership</h1>
       
       {/* Search for a Home Button */}
-      <div className="w-full max-w-4xl mx-auto mb-6">
-        <div className="bg-slate-50 rounded-lg border border-slate-200 p-4 text-center">
-          <h3 className="text-lg font-semibold text-slate-800 mb-2">Ready to Find Your Dream Home?</h3>
-          <p className="text-slate-600 mb-4 text-sm">
+      <div className="w-full max-w-4xl mx-auto mb-4 md:mb-6">
+        <div className="bg-slate-50 rounded-lg border border-slate-200 p-3 md:p-4 text-center">
+          <h3 className="text-base md:text-lg font-semibold text-slate-800 mb-2">Ready to Find Your Dream Home?</h3>
+          <p className="text-slate-600 mb-3 md:mb-4 text-xs md:text-sm">
             Explore available properties in your area with our trusted partner
           </p>
           <button
             onClick={handleSearchForHome}
-            className="bg-white text-slate-700 px-6 py-2 rounded-lg font-medium text-base border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-all duration-200"
+            className="bg-white text-slate-700 px-4 md:px-6 py-2 rounded-lg font-medium text-sm md:text-base border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-all duration-200"
           >
             Search for a Home
           </button>
@@ -61,8 +61,8 @@ const HomeScreen = ({
       </div>
 
       <div className="card w-full">
-        <h2 className="text-2xl font-bold mb-4 text-center">Your Personalized Readiness Report</h2>
-        <p className="mb-6 text-center">
+        <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-center">Your Personalized Readiness Report</h2>
+        <p className="mb-4 md:mb-6 text-center text-sm md:text-base">
           Input your details below to instantly generate your personalized homebuyer readiness assessment.<br />
           <span style={{ fontWeight: 600 }}>Score based on your self-reported data. Estimates only, not a guarantee of pre-approval.</span>
         </p>

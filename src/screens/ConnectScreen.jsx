@@ -1,4 +1,6 @@
 import React from 'react';
+import JeffHeadshot from '../assets/Jeff\'s Headshot.png';
+import KateleighHeadshot from '../assets/Kateleigh_Headshot.jpg';
 
 // ConnectScreen component receives props from App.jsx
 const ConnectScreen = ({
@@ -123,7 +125,7 @@ const ConnectScreen = ({
                 <div className="card bg-blue-50 border-blue-200 max-w-md mx-auto">
                   <span className="absolute top-2 right-2 bg-[var(--color-accent)] text-white text-xs font-semibold px-3 py-1 rounded-full">FEATURED</span>
                   <img
-                    src="https://placehold.co/80x80/0077b6/ffffff?text=JL"
+                    src={JeffHeadshot}
                     alt="Jeff Levesque"
                     className="w-20 h-20 rounded-full object-cover mb-3 border-2 border-[#0077b6] mx-auto"
                   />
@@ -212,7 +214,7 @@ const ConnectScreen = ({
                 <div className="card bg-green-50 border-green-200 max-w-md mx-auto">
                   <span className="absolute top-2 right-2 bg-[var(--color-primary)] text-white text-xs font-semibold px-3 py-1 rounded-full">FEATURED</span>
                   <img
-                    src="https://placehold.co/80x80/22c55e/ffffff?text=KC"
+                    src={KateleighHeadshot}
                     alt="Kateleigh Clough"
                     className="w-20 h-20 rounded-full object-cover mb-3 border-2 border-[#22c55e] mx-auto"
                   />

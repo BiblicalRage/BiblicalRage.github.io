@@ -306,6 +306,7 @@ const MortgageCalculator = ({
   collegeTaxRate, setCollegeTaxRate,
   homesteadExemption, setHomesteadExemption,
   showDTI, setShowDTI,
+  showDTIGuidelines, setShowDTIGuidelines,
   monthlyIncome, setMonthlyIncome,
   monthlyDebt, setMonthlyDebt,
   housingExpenses, setHousingExpenses,
@@ -565,21 +566,21 @@ const MortgageCalculator = ({
   return (
     <div className="w-full bg-white">
       <div className="w-full max-w-4xl mx-auto bg-white">
-        <div className="flex flex-col gap-6 md:gap-8 p-4 md:p-8">
+        <div className="flex flex-col gap-4 md:gap-6 lg:gap-8 p-3 md:p-4 lg:p-8">
           {/* Inputs */}
-          <div className="w-full flex flex-col gap-6 md:gap-8">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2 tracking-tight">
+          <div className="w-full flex flex-col gap-4 md:gap-6 lg:gap-8">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-slate-900 mb-2 tracking-tight">
               Mortgage Calculator
             </h2>
             
             {/* Debt-to-Income Ratio Section - AT THE TOP */}
-            <div className="bg-white rounded-2xl shadow p-4 border border-slate-100">
+            <div className="bg-white rounded-2xl shadow p-3 md:p-4 border border-slate-100">
               <button
                 onClick={() => setShowDTI(!showDTI)}
-                className="w-full transition duration-200 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-none flex items-center justify-center relative"
+                className="w-full transition duration-200 font-semibold text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-none flex items-center justify-center relative md:rounded-[18px] md:px-[0.75em] md:py-[0.75em] md:text-[1.05rem]"
                 style={{
-                  borderRadius: '18px',
-                  padding: '0.75em 1.5em',
+                  borderRadius: '14px',
+                  padding: '0.6em 1.2em',
                   background: 'linear-gradient(90deg, #80dac1 0%, #5cb0ec 100%)',
                   color: '#fff',
                   boxShadow: '0 2px 8px 0 rgba(0,0,0,0.08)',
@@ -590,7 +591,7 @@ const MortgageCalculator = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 600,
-                  fontSize: '1.05rem',
+                  fontSize: '0.95rem',
                   transition: 'transform 0.15s',
                   whiteSpace: 'nowrap',
                 }}
@@ -599,8 +600,8 @@ const MortgageCalculator = ({
               </button>
               
               {showDTI && (
-                <div className="mt-4 space-y-4 animate-fade-in">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="mt-3 md:mt-4 space-y-3 md:space-y-4 animate-fade-in">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                     <div>
                       <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1">
                         Monthly Income
@@ -614,7 +615,7 @@ const MortgageCalculator = ({
                           min={0}
                           max={100000}
                           step={100}
-                          className="input w-full text-lg text-right rounded-full border-2 border-[var(--color-primary)]"
+                          className="input w-full text-base md:text-lg text-right rounded-full border-2 border-[var(--color-primary)]"
                           style={{ fontWeight: 600 }}
                         />
                       </div>
@@ -632,7 +633,7 @@ const MortgageCalculator = ({
                           min={0}
                           max={10000}
                           step={50}
-                          className="input w-full text-lg text-right rounded-full border-2 border-[var(--color-accent)]"
+                          className="input w-full text-base md:text-lg text-right rounded-full border-2 border-[var(--color-accent)]"
                           style={{ fontWeight: 600 }}
                         />
                       </div>
@@ -650,7 +651,7 @@ const MortgageCalculator = ({
                           min={0}
                           max={10000}
                           step={50}
-                          className="input w-full text-lg text-right rounded-full border-2 border-[var(--color-primary)]"
+                          className="input w-full text-base md:text-lg text-right rounded-full border-2 border-[var(--color-accent)]"
                           style={{ fontWeight: 600 }}
                         />
                       </div>
@@ -666,7 +667,7 @@ const MortgageCalculator = ({
                           <input
                             type="number"
                             value={housingExpenses + otherDebts}
-                            className="input w-full text-lg text-right rounded-full border-2 border-slate-300 bg-slate-50"
+                            className="input w-full text-base md:text-lg text-right rounded-full border-2 border-slate-300 bg-slate-50"
                             style={{ fontWeight: 600 }}
                             readOnly
                           />
@@ -676,8 +677,8 @@ const MortgageCalculator = ({
                   </div>
 
                   {/* Pre-Approval Estimate */}
-                  <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 mt-4">
-                    <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-1">
+                  <div className="bg-slate-50 rounded-lg p-3 md:p-4 border border-slate-200 mt-3 md:mt-4">
+                    <h4 className="font-semibold text-slate-800 mb-2 md:mb-3 flex items-center gap-1 text-sm md:text-base">
                       Pre-Approval Estimate
                       <InfoTooltip text="Based on FHA lending guidelines and your current financial profile. This estimate assumes good credit and stable employment." />
                     </h4>
@@ -737,11 +738,11 @@ const MortgageCalculator = ({
 
             {/* Home Price */}
             <div>
-              <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1">
+              <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1 text-sm md:text-base">
                 Desired home price
                 <InfoTooltip text="The total price of the home you want to purchase. This includes the cost of the property itself." />
               </label>
-              <div className="flex flex-col md:flex-row items-center gap-3">
+              <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3">
                 <input
                   type="range"
                   min={50000}
@@ -757,7 +758,7 @@ const MortgageCalculator = ({
                   min={50000}
                   max={2000000}
                   step={1000}
-                  className="input w-full md:w-32 text-lg text-right rounded-full border-2 border-[var(--color-primary)]"
+                  className="input w-full md:w-32 text-base md:text-lg text-right rounded-full border-2 border-[var(--color-primary)]"
                   style={{ fontWeight: 600 }}
                 />
               </div>
@@ -768,11 +769,11 @@ const MortgageCalculator = ({
             </div>
             {/* Down Payment */}
             <div>
-              <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1">
+              <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1 text-sm md:text-base">
                 Down payment
                 <InfoTooltip text="The amount you will pay upfront. 20% is traditional, but many loans allow less." />
               </label>
-              <div className="flex flex-col md:flex-row items-center gap-3">
+              <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3">
                 <input
                   type="range"
                   min={0}
@@ -788,7 +789,7 @@ const MortgageCalculator = ({
                   min={0}
                   max={homePrice}
                   step={1000}
-                  className="input w-full md:w-32 text-lg text-right rounded-full border-2 border-[var(--color-accent)]"
+                  className="input w-full md:w-32 text-base md:text-lg text-right rounded-full border-2 border-[var(--color-accent)]"
                   style={{ fontWeight: 600 }}
                 />
                 <div className="flex items-center gap-1">
@@ -799,7 +800,7 @@ const MortgageCalculator = ({
                     min={0}
                     max={100}
                     step={0.1}
-                    className="w-16 text-lg text-right border-none bg-transparent text-slate-500 font-semibold focus:outline-none"
+                    className="w-16 text-base md:text-lg text-right border-none bg-transparent text-slate-500 font-semibold focus:outline-none"
                     style={{ fontWeight: 600 }}
                   />
                   <span className="text-slate-500 font-semibold">%)</span>
@@ -807,9 +808,9 @@ const MortgageCalculator = ({
               </div>
             </div>
             {/* Loan Term & Interest Rate */}
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col md:flex-row gap-3 md:gap-4">
               <div className="flex-1">
-                <label className="block text-slate-700 font-semibold mb-1">Loan term</label>
+                <label className="block text-slate-700 font-semibold mb-1 text-sm md:text-base">Loan term</label>
                 <CustomDropdown
                   value={loanTerm}
                   onChange={setLoanTerm}
@@ -824,7 +825,7 @@ const MortgageCalculator = ({
                 />
               </div>
               <div className="flex-1">
-                <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1">
+                <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1 text-sm md:text-base">
                   Interest rate
                   <InfoTooltip text="The annual interest rate for your mortgage. This affects your monthly payment and total interest paid." />
                 </label>
@@ -836,7 +837,7 @@ const MortgageCalculator = ({
                     step={0.01}
                     value={interestRate}
                     onChange={e => setInterestRate(Number(e.target.value))}
-                    className="input w-full text-lg text-right rounded-full border-2 border-[var(--color-primary)]"
+                    className="input w-full text-base md:text-lg text-right rounded-full border-2 border-[var(--color-primary)]"
                     style={{ fontWeight: 600 }}
                   />
                   <span className="text-slate-500 ml-2">%</span>
@@ -844,8 +845,8 @@ const MortgageCalculator = ({
               </div>
             </div>
             {/* Tax Rate (main, non-advanced) */}
-            <div className="mt-4">
-              <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1">
+            <div className="mt-3 md:mt-4">
+              <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1 text-sm md:text-base">
                 Tax Rate
                 <InfoTooltip text="The total property tax rate as a percentage. Adjust in advanced options for more detail." />
               </label>
@@ -1037,12 +1038,12 @@ const MortgageCalculator = ({
               {/* DTI Guidelines Dropdown */}
               <div className="mt-4">
                 <button
-                  onClick={() => setShowDTI(!showDTI)}
+                  onClick={() => setShowDTIGuidelines(!showDTIGuidelines)}
                   className="w-full text-left p-3 bg-slate-200 rounded-lg border border-slate-300 hover:bg-slate-300 transition-colors flex items-center justify-between"
                 >
                   <span className="font-semibold text-slate-700">DTI Guidelines</span>
                   <svg 
-                    className={`w-5 h-5 text-slate-600 transition-transform ${showDTI ? 'rotate-180' : ''}`} 
+                    className={`w-5 h-5 text-slate-600 transition-transform ${showDTIGuidelines ? 'rotate-180' : ''}`} 
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
@@ -1051,7 +1052,7 @@ const MortgageCalculator = ({
                   </svg>
                 </button>
                 
-                {showDTI && (
+                {showDTIGuidelines && (
                   <div className="mt-2 p-3 bg-slate-100 rounded-lg border border-slate-200">
                     <div className="text-sm text-slate-700 space-y-1">
                       <p><strong>Conventional Loans (Fannie Mae/Freddie Mac):</strong></p>

@@ -228,58 +228,475 @@ const Mortgage101Screen = ({
     <SectionDivider />
 
     {/* First-Time Homebuyer Questions (FAQ) */}
-    <SectionHeading>First-Time Homebuyer Questions (FAQ)</SectionHeading>
-    <MinimalCard title="Financial & Loan Questions" expanded={financialFaqExpanded} onClick={() => setFinancialFaqExpanded(!financialFaqExpanded)}>
-      Common questions about preparing financially for homeownership, including saving for down payments, improving credit scores, and managing debt.
-    </MinimalCard>
-    <MinimalCard title="The Search Process" expanded={searchFaqExpanded} onClick={() => setSearchFaqExpanded(!searchFaqExpanded)}>
-      Questions about finding the right home, working with real estate agents, and understanding different types of properties.
-    </MinimalCard>
-    <MinimalCard title="Making an Offer & Beyond" expanded={offerFaqExpanded} onClick={() => setOfferFaqExpanded(!offerFaqExpanded)}>
-      Information about making offers, negotiating prices, and understanding the terms of your purchase agreement.
-    </MinimalCard>
-    <MinimalCard title="Long-Term Ownership" expanded={longTermFaqExpanded} onClick={() => setLongTermFaqExpanded(!longTermFaqExpanded)}>
-      Questions about maintaining your home, refinancing options, and planning for future housing needs.
+    <SectionHeading>First-Time Homebuyer Questions (FAQ): Your Comprehensive Guide to Homeownership</SectionHeading>
+    <MinimalCard title="I. Financial Foundations & Loan Eligibility" expanded={financialFaqExpanded} onClick={() => setFinancialFaqExpanded(!financialFaqExpanded)}>
+      <div className="space-y-6">
+        <div>
+          <h4 className="font-semibold text-slate-800 mb-3">How much money do I really need to buy a home, beyond the down payment?</h4>
+          <p className="text-slate-700 mb-3">
+            Beyond your down payment, you'll need funds for closing costs and often for reserves.
+          </p>
+          
+          <div className="space-y-3">
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Closing Costs</h5>
+              <p className="text-slate-700 text-sm">
+                These are fees and expenses paid at the close of the transaction, typically ranging from 2% to 5% of the loan amount. They cover items like lender fees (origination, underwriting), third-party services (appraisal, title insurance, attorney fees), and prepaid expenses (initial property taxes, homeowner's insurance premiums, prepaid interest). These are distinct from your down payment.
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Reserves</h5>
+              <p className="text-slate-700 text-sm">
+                Many loan programs and lenders require you to have a certain amount of liquid funds remaining in your bank account after closing, typically measured in months of your proposed Principal, Interest, Taxes, and Insurance (PITI) payment. This demonstrates your ability to cover housing expenses in case of unexpected financial challenges. The amount required varies based on credit score, DTI, loan-to-value (LTV), and property type (e.g., multi-family properties often require more reserves).
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Other Initial Expenses</h5>
+              <p className="text-slate-700 text-sm">
+                Budget for movers, initial home repairs or renovations, and new furnishings. While not loan-related, these are practical financial considerations for new homeowners.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-slate-800 mb-3">Can I use gift funds for my down payment or closing costs? If so, what are the rules?</h4>
+          <p className="text-slate-700 mb-3">
+            Yes, you can generally use gift funds for your down payment and, in some cases, for closing costs, but strict rules apply depending on the loan program:
+          </p>
+          
+          <div className="space-y-3">
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Source of Funds</h5>
+              <p className="text-slate-700 text-sm">
+                Gift funds must come from an eligible donor, typically a relative (e.g., spouse, child, parent, grandparent, sibling) or sometimes a domestic partner or fiancé. The donor cannot be someone with an interest in the transaction (like the seller, real estate agent, or builder).
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">No Repayment Required</h5>
+              <p className="text-slate-700 text-sm">
+                The gift must truly be a "gift" with no expectation of repayment. The donor will typically sign a gift letter stating this, along with their name, relationship to you, the amount of the gift, and the date of the transfer.
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Documentation</h5>
+              <p className="text-slate-700 text-sm">
+                Lenders will require documentation from the donor, including their bank statements to show the source of the funds and proof of the transfer into your account. Large, undocumented deposits ("large deposits") into your bank account can raise red flags for underwriters if they appear within 60-90 days of your application, so it's always best to have gift funds documented and transferred well in advance.
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Minimum Borrower Contribution</h5>
+              <p className="text-slate-700 text-sm">
+                Some loan programs may require a small minimum contribution from your own funds, even if gift funds are available. For example, for conventional loans with less than 20% down on a single-family home, all the down payment can be a gift. However, for a 2-4 unit conventional property, you might need 5% of the down payment to come from your own funds. FHA and VA loans are generally more flexible with gift funds.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-slate-800 mb-3">What's the difference between "pre-qualification" and "pre-approval," and which do I need?</h4>
+          <p className="text-slate-700 mb-3">
+            These terms are often used interchangeably, but there's a significant difference in their rigor and value:
+          </p>
+          
+          <div className="space-y-3">
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Pre-Qualification</h5>
+              <p className="text-slate-700 text-sm">
+                This is a preliminary, informal assessment of your borrowing power. It's typically based on basic financial information you provide verbally or via a simple online form, without verification. The lender estimates how much you might qualify for. It's a quick estimate but carries little weight in a competitive market.
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Pre-Approval</h5>
+              <p className="text-slate-700 text-sm">
+                This is a much more robust and formal process. A lender actually reviews and verifies your financial documents (pay stubs, W-2s, bank statements, credit report) to determine your maximum loan amount. They issue a pre-approval letter, a conditional commitment to lend, specifying the loan amount.
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Which You Need</h5>
+              <p className="text-slate-700 text-sm">
+                You need a pre-approval. In today's competitive housing market, a strong pre-approval letter is essential. It shows sellers you are a serious, qualified buyer whose financing is likely to go through, making your offer more appealing. It also clarifies your budget, preventing you from looking at homes outside your affordable range.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </MinimalCard>
 
     <SectionDivider />
 
     {/* Mortgage Basics */}
-    <SectionHeading>Mortgage Basics</SectionHeading>
-    <MinimalCard title="What is a Mortgage? (The Basics)" expanded={whatIsMortgageExpanded} onClick={() => setWhatIsMortgageExpanded(!whatIsMortgageExpanded)}>
-      A mortgage is a loan used to purchase a home. The home itself serves as collateral for the loan. Mortgages typically have terms of 15 to 30 years, and the interest rate can be fixed or adjustable.
+    <SectionHeading>Mortgage Basics: Understanding Your Home Loan Foundation</SectionHeading>
+    <MinimalCard title="What is a Mortgage? (The Anatomy of Your Home Loan)" expanded={whatIsMortgageExpanded} onClick={() => setWhatIsMortgageExpanded(!whatIsMortgageExpanded)}>
+      <div className="space-y-4">
+        <p className="text-slate-700">
+          A mortgage is fundamentally a loan secured by real estate – specifically, the home you are purchasing. It's comprised of two key legal documents:
+        </p>
+        
+        <div className="space-y-3">
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">The Promissory Note</h5>
+            <p className="text-slate-700 text-sm">
+              This is your legally binding promise to repay the borrowed amount, detailing the terms of repayment, interest rate, and consequences of default.
+            </p>
+          </div>
+          
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">The Mortgage (or Deed of Trust)</h5>
+            <p className="text-slate-700 text-sm">
+              This document pledges the property itself as collateral for the loan. If you fail to meet your repayment obligations (default), this legal instrument grants the lender the right to take possession of the property (foreclosure) to recover their funds.
+            </p>
+          </div>
+        </div>
+        
+        <p className="text-slate-700">
+          Mortgages are typically structured with repayment terms ranging from 15 to 30 years, often referred to as the amortization period. The interest rate applied to the loan can be either fixed (unchanging throughout the loan term) or adjustable (periodically reset based on market conditions).
+        </p>
+        
+        <p className="text-slate-700">
+          It's crucial to understand that while "mortgage" is a general term, specific loan programs exist, such as Conventional (backed by Fannie Mae or Freddie Mac), FHA (Federal Housing Administration), VA (Department of Veterans Affairs), and USDA loans, each with unique requirements and benefits.
+        </p>
+      </div>
     </MinimalCard>
-    <MinimalCard title="Interest Rates Explained (Your Cost of Borrowing)" expanded={interestRatesExpanded} onClick={() => setInterestRatesExpanded(!interestRatesExpanded)}>
-      The interest rate is the percentage charged by the lender for the money you borrow. It greatly influences your monthly payment and the total amount you'll pay over the life of the loan.
+    
+    <MinimalCard title="Interest Rates Explained (The True Cost of Borrowing)" expanded={interestRatesExpanded} onClick={() => setInterestRatesExpanded(!interestRatesExpanded)}>
+      <div className="space-y-4">
+        <p className="text-slate-700">
+          The interest rate is the percentage charged by the lender for the privilege of borrowing money. It is the primary factor influencing both your monthly loan payment and the total amount you will repay over the loan's lifetime.
+        </p>
+        
+        <p className="text-slate-700">
+          It's important to distinguish between:
+        </p>
+        
+        <div className="space-y-3">
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">Nominal Interest Rate</h5>
+            <p className="text-slate-700 text-sm">
+              The stated rate on your loan, used to calculate your monthly Principal & Interest (P&I) payment.
+            </p>
+          </div>
+          
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">Annual Percentage Rate (APR)</h5>
+            <p className="text-slate-700 text-sm">
+              This provides a more comprehensive measure of the total cost of your loan. It includes the nominal interest rate plus certain other upfront fees and costs (like origination fees, discount points, and mortgage insurance premiums) converted into an annualized percentage. The APR is designed to help consumers compare the true cost of different loan offers.
+            </p>
+          </div>
+        </div>
+        
+        <p className="text-slate-700">
+          Several factors influence the interest rate you're offered, including broader economic conditions (like Federal Reserve policy and the bond market), your individual financial profile (credit score, Debt-to-Income ratio, Loan-to-Value ratio), and the specific type of loan you choose.
+        </p>
+        
+        <p className="text-slate-700">
+          Lenders may also offer "points" – a fee paid upfront, typically 1% of the loan amount per point, which can either reduce (discount points) or increase (origination points) your interest rate.
+        </p>
+      </div>
     </MinimalCard>
-    <MinimalCard title="Understanding Closing Costs (The Hidden Fees)" expanded={closingCostsExpanded} onClick={() => setClosingCostsExpanded(!closingCostsExpanded)}>
-      Closing costs are fees and expenses paid at the closing of a real estate transaction, beyond the purchase price of the property and your down payment. They typically range from 2% to 5% of the loan amount.
+    
+    <MinimalCard title="Understanding Closing Costs (The Essential Transaction Fees)" expanded={closingCostsExpanded} onClick={() => setClosingCostsExpanded(!closingCostsExpanded)}>
+      <div className="space-y-4">
+        <p className="text-slate-700">
+          Closing costs are a collection of fees and expenses beyond the actual purchase price of the property and your down payment, which are paid at the conclusion of a real estate transaction. They represent the various services required to process and close your loan and transfer property ownership legally.
+        </p>
+        
+        <p className="text-slate-700">
+          These costs typically range from 2% to 5% of the loan amount but can vary significantly based on state regulations, local taxes, lender fees, and the specific loan product.
+        </p>
+        
+        <h5 className="font-semibold text-slate-800 mt-4 mb-2">Common categories of closing costs include:</h5>
+        
+        <div className="space-y-3">
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h6 className="font-semibold text-slate-800 mb-2">Lender Fees</h6>
+            <p className="text-slate-700 text-sm">
+              Origination fees, underwriting fees, application fees, discount points.
+            </p>
+          </div>
+          
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h6 className="font-semibold text-slate-800 mb-2">Third-Party Fees</h6>
+            <p className="text-slate-700 text-sm">
+              Appraisal fees, credit report fees, title search and insurance, attorney fees, survey fees, recording fees.
+            </p>
+          </div>
+          
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h6 className="font-semibold text-slate-800 mb-2">Prepaids/Escrow Setup</h6>
+            <p className="text-slate-700 text-sm">
+              Initial deposits for property taxes and homeowner's insurance (often held in an escrow account, discussed below), and prepaid interest.
+            </p>
+          </div>
+        </div>
+        
+        <p className="text-slate-700">
+          You will receive a Loan Estimate shortly after applying for a mortgage, detailing your estimated closing costs. A few days before closing, you'll receive a Closing Disclosure, which provides the final, confirmed list of all charges. Reviewing these documents meticulously is crucial.
+        </p>
+      </div>
     </MinimalCard>
-    <MinimalCard title="What is Escrow? (Handling Your Property Bills)" expanded={escrowExpanded} onClick={() => setEscrowExpanded(!escrowExpanded)}>
-      Escrow is a neutral third party that holds funds and documents during the home buying process. It ensures that all conditions of the sale are met before the transaction is completed.
+    
+    <MinimalCard title="What is Escrow? (Protecting Funds and Managing Property Bills)" expanded={escrowExpanded} onClick={() => setEscrowExpanded(!escrowExpanded)}>
+      <div className="space-y-4">
+        <p className="text-slate-700">
+          The term "escrow" refers to a neutral third party that holds funds and documents on behalf of the buyer and seller (or borrower and lender) to ensure all conditions of a transaction are met before completion. It's used in two primary contexts in real estate:
+        </p>
+        
+        <div className="space-y-3">
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">Escrow for Closing (Closing Escrow)</h5>
+            <p className="text-slate-700 text-sm">
+              During the home-buying process, an escrow agent (often a title company or attorney) holds important documents (like the deed) and funds (like your earnest money deposit) until all contingencies of the sale agreement are satisfied and the transaction can be finalized. This ensures a fair and secure transfer of ownership.
+            </p>
+          </div>
+          
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">Escrow for Ongoing Property Expenses (Impound Account)</h5>
+            <p className="text-slate-700 text-sm">
+              After your loan closes, your mortgage lender may establish an "escrow account" (also known as an impound account). This account is where a portion of your monthly mortgage payment is specifically set aside by the lender to cover your future property taxes and homeowner's insurance premiums when they become due. This arrangement mitigates risk for the lender by ensuring these crucial payments are made on time, protecting their collateral. If you have Private Mortgage Insurance (PMI) or FHA Mortgage Insurance Premium (MIP), these costs are also typically collected and managed via this escrow account.
+            </p>
+          </div>
+        </div>
+      </div>
     </MinimalCard>
-    <MinimalCard title="The Importance of Pre-Approval (Your Buying Power)" expanded={preApprovalExpanded} onClick={() => setPreApprovalExpanded(!preApprovalExpanded)}>
-      Pre-approval is a preliminary evaluation by a lender that determines how much you can borrow. It's a crucial first step in the home buying process.
+    
+    <MinimalCard title="The Importance of Pre-Approval (Validating Your Buying Power)" expanded={preApprovalExpanded} onClick={() => setPreApprovalExpanded(!preApprovalExpanded)}>
+      <div className="space-y-4">
+        <p className="text-slate-700">
+          Pre-approval is a critical preliminary step in the home buying process where a mortgage lender evaluates your financial information and provides a conditional commitment outlining how much money you are qualified to borrow. It is more robust than a simple "pre-qualification" (which is often just a quick estimate based on verbal information) because it involves a review of your actual financial documentation.
+        </p>
+        
+        <h5 className="font-semibold text-slate-800 mt-4 mb-2">Obtaining a pre-approval is crucial for several reasons:</h5>
+        
+        <div className="space-y-3">
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h6 className="font-semibold text-slate-800 mb-2">Establishes Your Budget</h6>
+            <p className="text-slate-700 text-sm">
+              It clearly defines your maximum affordable loan amount, allowing you to focus your home search within a realistic price range.
+            </p>
+          </div>
+          
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h6 className="font-semibold text-slate-800 mb-2">Shows Seriousness to Sellers</h6>
+            <p className="text-slate-700 text-sm">
+              When making an offer, having a pre-approval letter demonstrates to sellers that you are a serious and qualified buyer, making your offer more competitive.
+            </p>
+          </div>
+          
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h6 className="font-semibold text-slate-800 mb-2">Speeds Up the Process</h6>
+            <p className="text-slate-700 text-sm">
+              By completing much of the financial vetting upfront, pre-approval can expedite the subsequent steps of the loan application once you find a home.
+            </p>
+          </div>
+          
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h6 className="font-semibold text-slate-800 mb-2">Uncovers Potential Issues</h6>
+            <p className="text-slate-700 text-sm">
+              It helps identify any financial areas needing attention (e.g., credit discrepancies, DTI concerns) before you're deep into a transaction.
+            </p>
+          </div>
+        </div>
+        
+        <p className="text-slate-700">
+          During pre-approval, lenders typically review documentation such as pay stubs, W-2s, tax returns, and bank statements to verify your income, assets, and debts.
+        </p>
+      </div>
     </MinimalCard>
-    <MinimalCard title="Fixed vs. Adjustable Rate Mortgages (Predictability vs. Flexibility)" expanded={fixedVsAdjustableExpanded} onClick={() => setFixedVsAdjustableExpanded(!fixedVsAdjustableExpanded)}>
-      Fixed-rate mortgages have the same interest rate for the entire loan term. Adjustable-rate mortgages (ARMs) have rates that can change periodically. Fixed rates offer stability, while ARMs may start with lower rates.
+    
+    <MinimalCard title="Fixed vs. Adjustable Rate Mortgages (Stability vs. Adaptability)" expanded={fixedVsAdjustableExpanded} onClick={() => setFixedVsAdjustableExpanded(!fixedVsAdjustableExpanded)}>
+      <div className="space-y-4">
+        <p className="text-slate-700">
+          These are the two fundamental types of interest rate structures for mortgage loans, each offering distinct advantages and risks:
+        </p>
+        
+        <div className="space-y-4">
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-3">Fixed-Rate Mortgage (FRM)</h5>
+            
+            <div className="space-y-2">
+              <div>
+                <h6 className="font-semibold text-slate-700">Predictability</h6>
+                <p className="text-slate-700 text-sm">
+                  The interest rate remains constant for the entire duration of the loan term (e.g., 15 or 30 years).
+                </p>
+              </div>
+              
+              <div>
+                <h6 className="font-semibold text-slate-700">Stable Payments</h6>
+                <p className="text-slate-700 text-sm">
+                  Your Principal & Interest (P&I) payment will never change, offering predictable budgeting and protection against rising interest rates.
+                </p>
+              </div>
+              
+              <div>
+                <h6 className="font-semibold text-slate-700">Best For</h6>
+                <p className="text-slate-700 text-sm">
+                  Borrowers who plan to stay in their home for many years, prefer payment stability, or when current interest rates are low and expected to rise.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-3">Adjustable-Rate Mortgage (ARM)</h5>
+            
+            <div className="space-y-2">
+              <div>
+                <h6 className="font-semibold text-slate-700">Initial Period</h6>
+                <p className="text-slate-700 text-sm">
+                  ARMs begin with a fixed interest rate for an introductory period, typically 3, 5, 7, or 10 years (e.g., a "5/1 ARM" means fixed for 5 years, then adjusts annually).
+                </p>
+              </div>
+              
+              <div>
+                <h6 className="font-semibold text-slate-700">Adjustable Period</h6>
+                <p className="text-slate-700 text-sm">
+                  After the initial fixed period, the interest rate will adjust periodically (e.g., annually) based on a specific market index (like SOFR – Secured Overnight Financing Rate) plus a fixed margin set by the lender.
+                </p>
+              </div>
+              
+              <div>
+                <h6 className="font-semibold text-slate-700">Caps</h6>
+                <p className="text-slate-700 text-sm">
+                  ARMs have limits on how much the interest rate can change:
+                </p>
+                <ul className="text-slate-700 text-sm ml-4 mt-1 space-y-1">
+                  <li><strong>Initial Adjustment Cap:</strong> Limits the first adjustment after the fixed period.</li>
+                  <li><strong>Periodic Adjustment Cap:</strong> Limits how much the rate can change in any subsequent adjustment period.</li>
+                  <li><strong>Lifetime Cap:</strong> The maximum the interest rate can ever go up over the life of the loan.</li>
+                </ul>
+              </div>
+              
+              <div>
+                <h6 className="font-semibold text-slate-700">Flexibility</h6>
+                <p className="text-slate-700 text-sm">
+                  ARMs typically offer a lower interest rate during the initial fixed period compared to a 30-year fixed-rate mortgage.
+                </p>
+              </div>
+              
+              <div>
+                <h6 className="font-semibold text-slate-700">Best For</h6>
+                <p className="text-slate-700 text-sm">
+                  Borrowers who plan to sell or refinance before the fixed period ends, those who anticipate their income will increase, or in a declining interest rate environment. They involve more risk due to payment uncertainty after the initial fixed period.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </MinimalCard>
 
     <SectionDivider />
 
-    {/* Guided Readiness Paths & Strategies */}
-    <SectionHeading>Guided Readiness Paths & Strategies</SectionHeading>
-    <MinimalCard title="Credit Improvement" expanded={creditExpanded} onClick={() => setCreditExpanded(!creditExpanded)}>
-      Your credit score is a key factor in mortgage approval. Focus on paying bills on time, keeping credit utilization low, and checking your credit report regularly.
-    </MinimalCard>
-    <MinimalCard title="Down Payment Savings" expanded={downPaymentExpanded} onClick={() => setDownPaymentExpanded(!downPaymentExpanded)}>
-      A strong down payment can lead to better loan terms and lower monthly payments. Set a realistic goal and automate your savings.
-    </MinimalCard>
-    <MinimalCard title="Debt Reduction" expanded={debtReductionExpanded} onClick={() => setDebtReductionExpanded(!debtReductionExpanded)}>
-      Reducing your existing debt is crucial for improving your debt-to-income ratio (DTI), a key metric lenders use.
-    </MinimalCard>
-    <MinimalCard title="Income Optimization" expanded={incomeOptimizationExpanded} onClick={() => setIncomeOptimizationExpanded(!incomeOptimizationExpanded)}>
-      Lenders need clear, consistent proof of income. Maintain good records and consider ways to increase your income.
+    {/* Second-Time Homebuyer Questions (FAQ) */}
+    <SectionHeading>Second-Time Homebuyer Questions (FAQ): Understanding the Home Search and Property's Impact on Your Loan</SectionHeading>
+    <MinimalCard title="II. The Home Search & Property's Impact on Your Loan" expanded={searchFaqExpanded} onClick={() => setSearchFaqExpanded(!searchFaqExpanded)}>
+      <div className="space-y-6">
+        <div>
+          <h4 className="font-semibold text-slate-800 mb-3">How does the type of property I choose (e.g., single-family, condo, multi-family) affect my mortgage options and requirements?</h4>
+          <p className="text-slate-700 mb-3">
+            The type of property significantly influences the available mortgage programs, down payment requirements, interest rates, and approval criteria:
+          </p>
+          
+          <div className="space-y-3">
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Single-Family Homes</h5>
+              <p className="text-slate-700 text-sm">
+                These are typically the most straightforward to finance, with the widest range of loan options (Conventional, FHA, VA, USDA). Down payment requirements can be as low as 3-3.5% depending on the program.
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Condominiums</h5>
+              <p className="text-slate-700 text-sm">
+                Financing condos can be more complex. Lenders evaluate not just your financial profile but also the financial health and characteristics of the entire condo complex. The Homeowners Association (HOA) must often meet specific lender approval guidelines (e.g., owner-occupancy rates, litigation, budget stability) for conventional financing. FHA and VA loans also have specific condo approval lists. Down payment requirements might be higher if the complex isn't fully "approved."
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Multi-Family Homes (2-4 Units)</h5>
+              <p className="text-slate-700 text-sm">
+                You can often finance a 2-4 unit property with a residential mortgage if you plan to live in one of the units (owner-occupied). However, down payment requirements are usually higher (e.g., 5% to 15%+ for conventional, 3.5% for FHA), and lenders will scrutinize rental income projections and may require more cash reserves. The property's income-generating potential becomes part of the underwriting analysis.
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Other Property Types</h5>
+              <p className="text-slate-700 text-sm">
+                These often have specialized loan programs or stricter requirements, as they carry different risks for lenders.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-slate-800 mb-3">What should I understand about property taxes and homeowner's insurance when looking at different areas?</h4>
+          <p className="text-slate-700 mb-3">
+            Property taxes and homeowner's insurance are crucial ongoing costs that directly impact your total monthly mortgage payment (as part of PITI) and, therefore, your Debt-to-Income (DTI) ratio and affordability.
+          </p>
+          
+          <div className="space-y-3">
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Property Taxes</h5>
+              <p className="text-slate-700 text-sm">
+                These are levied by local governments (county, city, school district, etc.) based on the assessed value of the property. Rates vary significantly by state, county, city, and even within different school districts of the same city. A higher property tax rate or higher assessed value means a higher monthly tax payment. You must factor these into your budget for any home you consider, as they can add hundreds or even thousands of dollars to your monthly housing expense.
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Homeowner's Insurance (HOI)</h5>
+              <p className="text-slate-700 text-sm">
+                This policy protects your home and belongings against perils like fire, theft, and natural disasters. Like property taxes, HOI premiums vary widely based on location (e.g., coastal areas, tornado alley), the age and construction of the home, its replacement cost, and your chosen coverage. High-risk areas (e.g., flood zones, wildfire zones) may require additional insurance (like flood insurance) which adds to the cost.
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Impact on DTI</h5>
+              <p className="text-slate-700 text-sm">
+                Both property taxes and HOI are mandatory components of your monthly housing payment used in DTI calculations. Even if you qualify for a specific loan amount, high taxes or insurance in a particular area can push your total housing payment beyond your affordable limits or DTI thresholds. Always research these costs for any specific property you are considering.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-slate-800 mb-3">What is a home appraisal, and how does it affect my loan amount and approval?</h4>
+          <p className="text-slate-700 mb-3">
+            A home appraisal is an independent, professional assessment of a property's market value, conducted by a licensed appraiser on behalf of the mortgage lender. Its purpose is to ensure that the value of the home supports the loan amount being requested.
+          </p>
+          
+          <div className="space-y-3">
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Lender's Perspective</h5>
+              <p className="text-slate-700 text-sm">
+                The home serves as collateral for your loan. Lenders want to ensure that if you were to default, they could sell the property for at least the amount of the loan. Therefore, they will typically only lend up to the appraised value of the home, regardless of the agreed-upon purchase price.
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Impact on Loan Amount</h5>
+              <p className="text-slate-700 text-sm">
+                If the appraisal comes in lower than the agreed-upon purchase price, it creates an "appraisal gap." In this scenario, the lender will base your loan amount on the lower appraised value. This means you would need to: negotiate with the seller to lower the price, bring additional cash to closing to cover the difference between the appraised value and the purchase price, or walk away from the deal (if your contract has an appraisal contingency).
+              </p>
+            </div>
+            
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <h5 className="font-semibold text-slate-800 mb-2">Approval Condition</h5>
+              <p className="text-slate-700 text-sm">
+                The appraisal is a crucial contingency for almost all mortgage loans. Your loan approval is conditional upon the property appraising at a value sufficient to justify the loan.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </MinimalCard>
   </div>
 );

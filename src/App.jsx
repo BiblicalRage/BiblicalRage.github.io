@@ -65,7 +65,8 @@ const App = () => {
   const [collegeTaxRate, setCollegeTaxRate] = useState(0.1467);
   const [homesteadExemption, setHomesteadExemption] = useState(100000);
   const [showDTI, setShowDTI] = useState(false);
-  const [monthlyIncome, setMonthlyIncome] = useState(5000);
+  const [showDTIGuidelines, setShowDTIGuidelines] = useState(false);
+  const [monthlyIncome, setMonthlyIncome] = useState(6500);
   const [monthlyDebt, setMonthlyDebt] = useState(500);
   const [housingExpenses, setHousingExpenses] = useState(0);
   const [otherDebts, setOtherDebts] = useState(500);
@@ -274,23 +275,25 @@ const App = () => {
       />
       
       {/* Enhanced Header */}
-      <header className="w-full bg-white py-8 px-5 shadow-lg">
+      <header className="w-full bg-white py-4 md:py-8 px-3 md:px-5 shadow-lg">
         <div className="max-w-7xl w-full mx-auto" style={{ textAlign: 'center', position: 'relative' }}>
           <div style={{ display: 'inline-block', verticalAlign: 'middle' }}>
             <img
               src={firstKeyLogo}
               alt="FirstKey Logo"
-              style={{ width: 110, height: 160, objectFit: 'contain', minWidth: 110, display: 'block', margin: '0 auto' }}
+              style={{ width: 80, height: 120, objectFit: 'contain', minWidth: 80, display: 'block', margin: '0 auto' }}
+              className="md:w-[110px] md:h-[160px] md:min-w-[110px]"
             />
             <h1 style={{
-              fontSize: '2.5rem',
+              fontSize: '1.8rem',
               fontWeight: 800,
               letterSpacing: '-0.03em',
               marginBottom: 0,
-              marginTop: 12,
+              marginTop: 8,
               color: '#222',
               textShadow: '0 2px 8px rgba(30,41,59,0.10)'
-            }}>
+            }}
+            className="md:text-[2.5rem] md:mt-3">
               <span style={{ color: '#222' }}>First</span>
               <span style={{
                 background: 'linear-gradient(90deg, #80dac1 0%, #5cb0ec 100%)',
@@ -303,34 +306,14 @@ const App = () => {
               }}>Key</span>
             </h1>
           </div>
-          <button
-            onClick={() => signOut(auth)}
-            style={{
-              position: 'absolute',
-              right: 0,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              padding: '8px 24px',
-              background: '#fff',
-              color: '#5cb0ec',
-              fontWeight: 600,
-              borderRadius: 8,
-              boxShadow: '0 2px 8px 0 rgba(0,0,0,0.06)',
-              border: '1px solid #e2e8f0',
-              transition: 'background 0.2s, box-shadow 0.2s',
-              height: 40
-            }}
-          >
-            Log Out
-          </button>
         </div>
       </header>
 
       {/* Enhanced Navigation */}
       <nav className="sticky top-0 z-40 border-b border-slate-200 shadow-sm flex justify-center bg-white/95 backdrop-blur-sm">
-        <div className="w-full px-4 flex justify-center">
+        <div className="w-full px-2 md:px-4 flex justify-center">
           <div
-            className="flex flex-row justify-center items-center py-3 gap-3"
+            className="flex flex-row justify-center items-center py-3 md:py-3 gap-2 md:gap-3"
             style={{
               whiteSpace: 'nowrap',
               overflowX: 'auto',
@@ -340,24 +323,56 @@ const App = () => {
               alignItems: 'center',
               width: '100%',
               maxWidth: '100%',
-              paddingLeft: '1rem',
-              paddingRight: '1rem',
+              paddingLeft: '0.5rem',
+              paddingRight: '0.5rem',
             }}
           >
             {[
-              { key: 'home', label: 'Home' },
-              { key: 'documents', label: 'Documents Required' },
-              { key: 'mortgage101', label: 'Mortgage 101' },
-              { key: 'connect', label: 'Connect' },
+              { 
+                key: 'home', 
+                label: 'Home',
+                icon: (
+                  <svg className="w-8 h-8 md:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                )
+              },
+              { 
+                key: 'documents', 
+                label: 'Documents Required',
+                icon: (
+                  <svg className="w-8 h-8 md:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                )
+              },
+              { 
+                key: 'mortgage101', 
+                label: 'Mortgage 101',
+                icon: (
+                  <svg className="w-8 h-8 md:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                )
+              },
+              { 
+                key: 'connect', 
+                label: 'Connect',
+                icon: (
+                  <svg className="w-8 h-8 md:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                )
+              },
             ].map((tab, index) => (
               <button
                 key={tab.key}
-                className={`transition duration-200 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-none flex items-center justify-center relative`
+                className={`transition duration-200 font-semibold text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-none flex items-center justify-center relative md:rounded-[18px] md:px-[0.55em] md:py-[0.55em] md:text-[1.05rem]`
                   + (currentView === tab.key ? ' z-10 scale-105' : ' opacity-90 hover:opacity-100')
                 }
                 style={{
-                  borderRadius: '18px',
-                  padding: '0.55em 1.5em',
+                  borderRadius: '14px',
+                  padding: '0.6em 1.2em',
                   background: 'linear-gradient(90deg, #80dac1 0%, #5cb0ec 100%)',
                   color: '#fff',
                   boxShadow: currentView === tab.key ? '0 2px 8px 0 rgba(0,0,0,0.08)' : 'none',
@@ -368,13 +383,16 @@ const App = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 600,
-                  fontSize: '1.05rem',
+                  fontSize: '0.9rem',
                   transition: 'transform 0.15s',
                   whiteSpace: 'nowrap',
+                  minHeight: '48px',
+                  minWidth: '48px',
                 }}
                 onClick={() => setCurrentView(tab.key)}
               >
-                {tab.label}
+                {tab.icon}
+                <span className="hidden md:inline">{tab.label}</span>
               </button>
             ))}
           </div>
@@ -382,7 +400,7 @@ const App = () => {
       </nav>
 
       {/* Main Content Area */}
-      <main className="flex-grow max-w-7xl w-full mx-auto px-4 py-6">
+      <main className="flex-grow max-w-7xl w-full mx-auto px-3 md:px-4 py-4 md:py-6">
         {currentView === 'home' && (
           <HomeScreen
             showCustomModal={showCustomModal}
@@ -424,6 +442,8 @@ const App = () => {
             setHomesteadExemption={setHomesteadExemption}
             showDTI={showDTI}
             setShowDTI={setShowDTI}
+            showDTIGuidelines={showDTIGuidelines}
+            setShowDTIGuidelines={setShowDTIGuidelines}
             monthlyIncome={monthlyIncome}
             setMonthlyIncome={setMonthlyIncome}
             monthlyDebt={monthlyDebt}
