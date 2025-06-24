@@ -65,7 +65,7 @@ const HomeScreen = ({
         <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-center">Your Personalized Readiness Report</h2>
         <p className="mb-4 md:mb-6 text-center text-sm md:text-base">
           Input your details below to instantly generate your personalized homebuyer readiness assessment.<br />
-          <span style={{ fontWeight: 600 }}>Score based on your self-reported data. Estimates only, not a guarantee of pre-approval.</span>
+          <span style={{ fontWeight: 600 }}>Score based on your self-reported data. Estimates only, not a guarantee of pre-qualification.</span>
         </p>
         <MortgageCalculator 
           homePrice={homePrice}

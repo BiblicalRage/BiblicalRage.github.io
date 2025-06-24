@@ -423,8 +423,8 @@ const MortgageCalculator = ({
     return { status: 'Very Poor', color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-200' };
   };
 
-  // Pre-approval calculator
-  const calculatePreApproval = () => {
+  // Pre-qualification calculator
+  const calculatePreQualification = () => {
     if (monthlyIncome <= 0) return { maxHomePrice: 0, maxLoanAmount: 0, confidence: 'low' };
     
     // Step 1: Calculate Gross Monthly Income (GMI)
@@ -505,7 +505,7 @@ const MortgageCalculator = ({
     }
     
     // Step 7: Calculate Max Purchase Price
-    // Use a reasonable down payment assumption for pre-approval (5%)
+    // Use a reasonable down payment assumption for pre-qualification (5%)
     const assumedDownPaymentPct = 0.05; // 5% down payment
     const maxHomePrice = maxLoanAmount / (1 - assumedDownPaymentPct);
     
@@ -541,9 +541,9 @@ const MortgageCalculator = ({
     };
   };
 
-  // Use pre-approval DTI for display in DTI section
-  const preApproval = calculatePreApproval();
-  const dtiStatus = getDTIStatus(preApproval.actualBackEndDTI);
+  // Use pre-qualification DTI for display in DTI section
+  const preQualification = calculatePreQualification();
+  const dtiStatus = getDTIStatus(preQualification.actualBackEndDTI);
 
   // Prepare amortization data for display and chart
   const displaySchedule = showAllMonths ? amortization : amortization.slice(0, 12);
@@ -676,20 +676,20 @@ const MortgageCalculator = ({
                     </div>
                   </div>
 
-                  {/* Pre-Approval Estimate */}
+                  {/* Pre-Qualification Estimate */}
                   <div className="bg-slate-50 rounded-lg p-3 md:p-4 border border-slate-200 mt-3 md:mt-4">
                     <h4 className="font-semibold text-slate-800 mb-2 md:mb-3 flex items-center gap-1 text-sm md:text-base">
-                      Pre-Approval Estimate
+                      Pre-Qualification Estimate
                       <InfoTooltip text="Based on FHA lending guidelines and your current financial profile. This estimate assumes good credit and stable employment." />
                     </h4>
                     
                     {(() => {
-                      if (preApproval.maxHomePrice <= 0) {
+                      if (preQualification.maxHomePrice <= 0) {
                         return (
                           <div className="text-center py-4">
-                            <p className="text-red-700 font-medium mb-2">Unable to calculate pre-approval</p>
+                            <p className="text-red-700 font-medium mb-2">Unable to calculate pre-qualification</p>
                             <p className="text-sm text-red-600">
-                              {preApproval.reason || 'Your current debt-to-income ratio may be too high for conventional lending. Consider reducing debts or increasing income.'}
+                              {preQualification.reason || 'Your current debt-to-income ratio may be too high for conventional lending. Consider reducing debts or increasing income.'}
                             </p>
                           </div>
                         );
@@ -699,9 +699,9 @@ const MortgageCalculator = ({
                         <div className="space-y-3">
                           <div className="bg-white rounded-lg p-4 border border-slate-200">
                             <div className="text-center">
-                              <span className="text-sm text-slate-600">Likely Pre-Approval Amount</span>
+                              <span className="text-sm text-slate-600">Likely Pre-Qualification Amount</span>
                               <div className="text-2xl font-bold text-slate-800 mt-1">
-                                {formatCurrency(preApproval.maxHomePrice)}
+                                {formatCurrency(preQualification.maxHomePrice)}
                               </div>
                             </div>
                           </div>
@@ -709,24 +709,24 @@ const MortgageCalculator = ({
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                             <div className="flex justify-between">
                               <span className="text-slate-600">Max Loan Amount:</span>
-                              <span className="font-semibold">{formatCurrency(preApproval.maxLoanAmount)}</span>
+                              <span className="font-semibold">{formatCurrency(preQualification.maxLoanAmount)}</span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-slate-600">Down Payment (5%):</span>
-                              <span className="font-semibold">{formatCurrency(preApproval.estimatedDownPayment)}</span>
+                              <span className="font-semibold">{formatCurrency(preQualification.estimatedDownPayment)}</span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-slate-600">Estimated Monthly Payment:</span>
-                              <span className="font-semibold">{formatCurrency(preApproval.estimatedMonthlyPayment)}</span>
+                              <span className="font-semibold">{formatCurrency(preQualification.estimatedMonthlyPayment)}</span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-slate-600">Back-End DTI:</span>
-                              <span className="font-semibold">{preApproval.actualBackEndDTI}%</span>
+                              <span className="font-semibold">{preQualification.actualBackEndDTI}%</span>
                             </div>
                           </div>
                           
                           <div className="text-xs text-slate-600 bg-slate-100 rounded p-2">
-                            <strong>Disclaimer:</strong> This is an estimate based on your inputs only. Actual pre-approval depends on credit score, employment history, down payment, and other factors. Consult with a qualified lender for accurate pre-approval.
+                            <strong>Disclaimer:</strong> This is an estimate based on your inputs only. Actual pre-qualification depends on credit score, employment history, down payment, and other factors. Consult with a qualified lender for accurate pre-qualification.
                           </div>
                         </div>
                       );
@@ -1032,7 +1032,7 @@ const MortgageCalculator = ({
               </div>
 
               <div className="text-xs text-slate-600 bg-slate-100 rounded p-2">
-                <strong>Disclaimer:</strong> This is an estimate based on your inputs only. Actual pre-approval depends on credit score, employment history, down payment, and other factors. Consult with a qualified lender for accurate pre-approval.
+                <strong>Disclaimer:</strong> This is an estimate based on your inputs only. Actual pre-qualification depends on credit score, employment history, down payment, and other factors. Consult with a qualified lender for accurate pre-qualification.
               </div>
 
               {/* DTI Guidelines Dropdown */}

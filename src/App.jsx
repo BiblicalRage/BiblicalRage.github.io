@@ -83,7 +83,7 @@ const App = () => {
   const [interestRatesExpanded, setInterestRatesExpanded] = useState(false);
   const [closingCostsExpanded, setClosingCostsExpanded] = useState(false);
   const [escrowExpanded, setEscrowExpanded] = useState(false);
-  const [preApprovalExpanded, setPreApprovalExpanded] = useState(false);
+  const [preQualificationExpanded, setPreQualificationExpanded] = useState(false);
   const [fixedVsAdjustableExpanded, setFixedVsAdjustableExpanded] = useState(false);
   const [creditExpanded, setCreditExpanded] = useState(false);
   const [downPaymentExpanded, setDownPaymentExpanded] = useState(false);
@@ -98,7 +98,6 @@ const App = () => {
   // New individual FAQ state variables
   const [downPaymentCostsExpanded, setDownPaymentCostsExpanded] = useState(false);
   const [giftFundsExpanded, setGiftFundsExpanded] = useState(false);
-  const [preQualificationExpanded, setPreQualificationExpanded] = useState(false);
 
   // Auth state
   const [user, setUser] = useState(null);
@@ -503,8 +502,8 @@ const App = () => {
             setClosingCostsExpanded={setClosingCostsExpanded}
             escrowExpanded={escrowExpanded}
             setEscrowExpanded={setEscrowExpanded}
-            preApprovalExpanded={preApprovalExpanded}
-            setPreApprovalExpanded={setPreApprovalExpanded}
+            preQualificationExpanded={preQualificationExpanded}
+            setPreQualificationExpanded={setPreQualificationExpanded}
             fixedVsAdjustableExpanded={fixedVsAdjustableExpanded}
             setFixedVsAdjustableExpanded={setFixedVsAdjustableExpanded}
             creditExpanded={creditExpanded}
@@ -529,8 +528,6 @@ const App = () => {
             setDownPaymentCostsExpanded={setDownPaymentCostsExpanded}
             giftFundsExpanded={giftFundsExpanded}
             setGiftFundsExpanded={setGiftFundsExpanded}
-            preQualificationExpanded={preQualificationExpanded}
-            setPreQualificationExpanded={setPreQualificationExpanded}
             ExpandableSection={ExpandableSection}
           />
         )}

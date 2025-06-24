@@ -189,7 +189,7 @@ const ConnectScreen = ({
                       className="input"
                       value={optionalMessage}
                       onChange={(e) => setOptionalMessage(e.target.value)}
-                      placeholder="e.g., 'Looking forward to discussing my pre-approval!'"
+                      placeholder="e.g., 'Looking forward to discussing my pre-qualification!'"
                     ></textarea>
                   </div>
 

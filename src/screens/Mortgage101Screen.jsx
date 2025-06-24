@@ -81,7 +81,7 @@ const Mortgage101Screen = ({
   interestRatesExpanded, setInterestRatesExpanded,
   closingCostsExpanded, setClosingCostsExpanded,
   escrowExpanded, setEscrowExpanded,
-  preApprovalExpanded, setPreApprovalExpanded,
+  preQualificationExpanded, setPreQualificationExpanded,
   fixedVsAdjustableExpanded, setFixedVsAdjustableExpanded,
   creditExpanded, setCreditExpanded,
   downPaymentExpanded, setDownPaymentExpanded,
@@ -326,7 +326,7 @@ const Mortgage101Screen = ({
           <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
             <h5 className="font-semibold text-slate-800 mb-2">Which You Need</h5>
             <p className="text-slate-700 text-sm">
-              You need a pre-approval. In today's competitive housing market, a strong pre-approval letter is essential. It shows sellers you are a serious, qualified buyer whose financing is likely to go through, making your offer more appealing. It also clarifies your budget, preventing you from looking at homes outside your affordable range.
+              You need a pre-qualification. In today's competitive housing market, a strong pre-qualification letter is essential. It shows sellers you are a serious, qualified buyer whose financing is likely to go through, making your offer more appealing. It also clarifies your budget, preventing you from looking at homes outside your affordable range.
             </p>
           </div>
         </div>
@@ -470,13 +470,13 @@ const Mortgage101Screen = ({
       </div>
     </MinimalCard>
     
-    <MinimalCard title="The Importance of Pre-Approval (Validating Your Buying Power)" expanded={preApprovalExpanded} onClick={() => setPreApprovalExpanded(!preApprovalExpanded)}>
+    <MinimalCard title="The Importance of Pre-Qualification (Validating Your Buying Power)" expanded={preQualificationExpanded} onClick={() => setPreQualificationExpanded(!preQualificationExpanded)}>
       <div className="space-y-4">
         <p className="text-slate-700">
-          Pre-approval is a critical preliminary step in the home buying process where a mortgage lender evaluates your financial information and provides a conditional commitment outlining how much money you are qualified to borrow. It is more robust than a simple "pre-qualification" (which is often just a quick estimate based on verbal information) because it involves a review of your actual financial documentation.
+          Pre-qualification is a critical preliminary step in the home buying process where a mortgage lender evaluates your financial information and provides a conditional commitment outlining how much money you are qualified to borrow. It is more robust than a simple "pre-qualification" (which is often just a quick estimate based on verbal information) because it involves a review of your actual financial documentation.
         </p>
         
-        <h5 className="font-semibold text-slate-800 mt-4 mb-2">Obtaining a pre-approval is crucial for several reasons:</h5>
+        <h5 className="font-semibold text-slate-800 mt-4 mb-2">Obtaining a pre-qualification is crucial for several reasons:</h5>
         
         <div className="space-y-3">
           <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
@@ -489,14 +489,14 @@ const Mortgage101Screen = ({
           <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
             <h6 className="font-semibold text-slate-800 mb-2">Shows Seriousness to Sellers</h6>
             <p className="text-slate-700 text-sm">
-              When making an offer, having a pre-approval letter demonstrates to sellers that you are a serious and qualified buyer, making your offer more competitive.
+              When making an offer, having a pre-qualification letter demonstrates to sellers that you are a serious and qualified buyer, making your offer more competitive.
             </p>
           </div>
           
           <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
             <h6 className="font-semibold text-slate-800 mb-2">Speeds Up the Process</h6>
             <p className="text-slate-700 text-sm">
-              By completing much of the financial vetting upfront, pre-approval can expedite the subsequent steps of the loan application once you find a home.
+              By completing much of the financial vetting upfront, pre-qualification can expedite the subsequent steps of the loan application once you find a home.
             </p>
           </div>
           
@@ -509,7 +509,7 @@ const Mortgage101Screen = ({
         </div>
         
         <p className="text-slate-700">
-          During pre-approval, lenders typically review documentation such as pay stubs, W-2s, tax returns, and bank statements to verify your income, assets, and debts.
+          During pre-qualification, lenders typically review documentation such as pay stubs, W-2s, tax returns, and bank statements to verify your income, assets, and debts.
         </p>
       </div>
     </MinimalCard>
