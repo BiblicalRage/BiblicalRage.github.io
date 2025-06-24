@@ -53,7 +53,7 @@ const ConnectScreen = ({
                 transition: 'background 0.15s, transform 0.15s',
                 cursor: 'pointer',
               }}
-              onMouseOver={e => e.currentTarget.style.background = '#5cb0ec'}
+              onMouseOver={e => e.currentTarget.style.background = '#199e8e'}
               onMouseOut={e => e.currentTarget.style.background = 'var(--color-accent)'}
             >
               Connect with a Lender
