@@ -1043,7 +1043,7 @@ const MortgageCalculator = ({
                 >
                   <span className="font-semibold text-slate-700">DTI Guidelines</span>
                   <svg 
-                    className={`w-5 h-5 text-slate-600 transition-transform ${showDTIGuidelines ? 'rotate-180' : ''}`} 
+                    className={`w-5 h-5 text-slate-600 transition-transform duration-200 ${showDTIGuidelines ? 'rotate-180' : ''}`} 
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
@@ -1053,7 +1053,7 @@ const MortgageCalculator = ({
                 </button>
                 
                 {showDTIGuidelines && (
-                  <div className="mt-2 p-3 bg-slate-100 rounded-lg border border-slate-200">
+                  <div className="mt-2 p-3 bg-slate-100 rounded-lg border border-slate-200 animate-fade-in">
                     <div className="text-sm text-slate-700 space-y-1">
                       <p><strong>Conventional Loans (Fannie Mae/Freddie Mac):</strong></p>
                       <ul className="list-disc list-inside ml-2 space-y-1">

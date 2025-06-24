@@ -94,6 +94,11 @@ const App = () => {
   const [offerFaqExpanded, setOfferFaqExpanded] = useState(false);
   const [longTermFaqExpanded, setLongTermFaqExpanded] = useState(false);
   const [economicIndicatorsExpanded, setEconomicIndicatorsExpanded] = useState(false);
+  
+  // New individual FAQ state variables
+  const [downPaymentCostsExpanded, setDownPaymentCostsExpanded] = useState(false);
+  const [giftFundsExpanded, setGiftFundsExpanded] = useState(false);
+  const [preQualificationExpanded, setPreQualificationExpanded] = useState(false);
 
   // Auth state
   const [user, setUser] = useState(null);
@@ -514,6 +519,12 @@ const App = () => {
             setLongTermFaqExpanded={setLongTermFaqExpanded}
             economicIndicatorsExpanded={economicIndicatorsExpanded}
             setEconomicIndicatorsExpanded={setEconomicIndicatorsExpanded}
+            downPaymentCostsExpanded={downPaymentCostsExpanded}
+            setDownPaymentCostsExpanded={setDownPaymentCostsExpanded}
+            giftFundsExpanded={giftFundsExpanded}
+            setGiftFundsExpanded={setGiftFundsExpanded}
+            preQualificationExpanded={preQualificationExpanded}
+            setPreQualificationExpanded={setPreQualificationExpanded}
             ExpandableSection={ExpandableSection}
           />
         )}

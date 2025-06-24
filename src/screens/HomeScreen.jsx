@@ -24,6 +24,7 @@ const HomeScreen = ({
   collegeTaxRate, setCollegeTaxRate,
   homesteadExemption, setHomesteadExemption,
   showDTI, setShowDTI,
+  showDTIGuidelines, setShowDTIGuidelines,
   monthlyIncome, setMonthlyIncome,
   monthlyDebt, setMonthlyDebt,
   housingExpenses, setHousingExpenses,
@@ -103,6 +104,8 @@ const HomeScreen = ({
           setHomesteadExemption={setHomesteadExemption}
           showDTI={showDTI}
           setShowDTI={setShowDTI}
+          showDTIGuidelines={showDTIGuidelines}
+          setShowDTIGuidelines={setShowDTIGuidelines}
           monthlyIncome={monthlyIncome}
           setMonthlyIncome={setMonthlyIncome}
           monthlyDebt={monthlyDebt}

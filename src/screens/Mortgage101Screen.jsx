@@ -92,6 +92,9 @@ const Mortgage101Screen = ({
   offerFaqExpanded, setOfferFaqExpanded,
   longTermFaqExpanded, setLongTermFaqExpanded,
   economicIndicatorsExpanded, setEconomicIndicatorsExpanded,
+  downPaymentCostsExpanded, setDownPaymentCostsExpanded,
+  giftFundsExpanded, setGiftFundsExpanded,
+  preQualificationExpanded, setPreQualificationExpanded,
 }) => (
   <div className="section flex flex-col items-center">
     <div className="text-center mb-8">
@@ -229,102 +232,102 @@ const Mortgage101Screen = ({
 
     {/* First-Time Homebuyer Questions (FAQ) */}
     <SectionHeading>First-Time Homebuyer Questions (FAQ): Your Comprehensive Guide to Homeownership</SectionHeading>
-    <MinimalCard title="I. Financial Foundations & Loan Eligibility" expanded={financialFaqExpanded} onClick={() => setFinancialFaqExpanded(!financialFaqExpanded)}>
-      <div className="space-y-6">
-        <div>
-          <h4 className="font-semibold text-slate-800 mb-3">How much money do I really need to buy a home, beyond the down payment?</h4>
-          <p className="text-slate-700 mb-3">
-            Beyond your down payment, you'll need funds for closing costs and often for reserves.
-          </p>
+    
+    <MinimalCard title="How much money do I really need to buy a home, beyond the down payment?" expanded={downPaymentCostsExpanded} onClick={() => setDownPaymentCostsExpanded(!downPaymentCostsExpanded)}>
+      <div className="space-y-4">
+        <p className="text-slate-700 mb-3">
+          Beyond your down payment, you'll need funds for closing costs and often for reserves.
+        </p>
+        
+        <div className="space-y-3">
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">Closing Costs</h5>
+            <p className="text-slate-700 text-sm">
+              These are fees and expenses paid at the close of the transaction, typically ranging from 2% to 5% of the loan amount. They cover items like lender fees (origination, underwriting), third-party services (appraisal, title insurance, attorney fees), and prepaid expenses (initial property taxes, homeowner's insurance premiums, prepaid interest). These are distinct from your down payment.
+            </p>
+          </div>
           
-          <div className="space-y-3">
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <h5 className="font-semibold text-slate-800 mb-2">Closing Costs</h5>
-              <p className="text-slate-700 text-sm">
-                These are fees and expenses paid at the close of the transaction, typically ranging from 2% to 5% of the loan amount. They cover items like lender fees (origination, underwriting), third-party services (appraisal, title insurance, attorney fees), and prepaid expenses (initial property taxes, homeowner's insurance premiums, prepaid interest). These are distinct from your down payment.
-              </p>
-            </div>
-            
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <h5 className="font-semibold text-slate-800 mb-2">Reserves</h5>
-              <p className="text-slate-700 text-sm">
-                Many loan programs and lenders require you to have a certain amount of liquid funds remaining in your bank account after closing, typically measured in months of your proposed Principal, Interest, Taxes, and Insurance (PITI) payment. This demonstrates your ability to cover housing expenses in case of unexpected financial challenges. The amount required varies based on credit score, DTI, loan-to-value (LTV), and property type (e.g., multi-family properties often require more reserves).
-              </p>
-            </div>
-            
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <h5 className="font-semibold text-slate-800 mb-2">Other Initial Expenses</h5>
-              <p className="text-slate-700 text-sm">
-                Budget for movers, initial home repairs or renovations, and new furnishings. While not loan-related, these are practical financial considerations for new homeowners.
-              </p>
-            </div>
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">Reserves</h5>
+            <p className="text-slate-700 text-sm">
+              Many loan programs and lenders require you to have a certain amount of liquid funds remaining in your bank account after closing, typically measured in months of your proposed Principal, Interest, Taxes, and Insurance (PITI) payment. This demonstrates your ability to cover housing expenses in case of unexpected financial challenges. The amount required varies based on credit score, DTI, loan-to-value (LTV), and property type (e.g., multi-family properties often require more reserves).
+            </p>
+          </div>
+          
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">Other Initial Expenses</h5>
+            <p className="text-slate-700 text-sm">
+              Budget for movers, initial home repairs or renovations, and new furnishings. While not loan-related, these are practical financial considerations for new homeowners.
+            </p>
           </div>
         </div>
+      </div>
+    </MinimalCard>
 
-        <div>
-          <h4 className="font-semibold text-slate-800 mb-3">Can I use gift funds for my down payment or closing costs? If so, what are the rules?</h4>
-          <p className="text-slate-700 mb-3">
-            Yes, you can generally use gift funds for your down payment and, in some cases, for closing costs, but strict rules apply depending on the loan program:
-          </p>
+    <MinimalCard title="Can I use gift funds for my down payment or closing costs? If so, what are the rules?" expanded={giftFundsExpanded} onClick={() => setGiftFundsExpanded(!giftFundsExpanded)}>
+      <div className="space-y-4">
+        <p className="text-slate-700 mb-3">
+          Yes, you can generally use gift funds for your down payment and, in some cases, for closing costs, but strict rules apply depending on the loan program:
+        </p>
+        
+        <div className="space-y-3">
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">Source of Funds</h5>
+            <p className="text-slate-700 text-sm">
+              Gift funds must come from an eligible donor, typically a relative (e.g., spouse, child, parent, grandparent, sibling) or sometimes a domestic partner or fiancé. The donor cannot be someone with an interest in the transaction (like the seller, real estate agent, or builder).
+            </p>
+          </div>
           
-          <div className="space-y-3">
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <h5 className="font-semibold text-slate-800 mb-2">Source of Funds</h5>
-              <p className="text-slate-700 text-sm">
-                Gift funds must come from an eligible donor, typically a relative (e.g., spouse, child, parent, grandparent, sibling) or sometimes a domestic partner or fiancé. The donor cannot be someone with an interest in the transaction (like the seller, real estate agent, or builder).
-              </p>
-            </div>
-            
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <h5 className="font-semibold text-slate-800 mb-2">No Repayment Required</h5>
-              <p className="text-slate-700 text-sm">
-                The gift must truly be a "gift" with no expectation of repayment. The donor will typically sign a gift letter stating this, along with their name, relationship to you, the amount of the gift, and the date of the transfer.
-              </p>
-            </div>
-            
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <h5 className="font-semibold text-slate-800 mb-2">Documentation</h5>
-              <p className="text-slate-700 text-sm">
-                Lenders will require documentation from the donor, including their bank statements to show the source of the funds and proof of the transfer into your account. Large, undocumented deposits ("large deposits") into your bank account can raise red flags for underwriters if they appear within 60-90 days of your application, so it's always best to have gift funds documented and transferred well in advance.
-              </p>
-            </div>
-            
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <h5 className="font-semibold text-slate-800 mb-2">Minimum Borrower Contribution</h5>
-              <p className="text-slate-700 text-sm">
-                Some loan programs may require a small minimum contribution from your own funds, even if gift funds are available. For example, for conventional loans with less than 20% down on a single-family home, all the down payment can be a gift. However, for a 2-4 unit conventional property, you might need 5% of the down payment to come from your own funds. FHA and VA loans are generally more flexible with gift funds.
-              </p>
-            </div>
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">No Repayment Required</h5>
+            <p className="text-slate-700 text-sm">
+              The gift must truly be a "gift" with no expectation of repayment. The donor will typically sign a gift letter stating this, along with their name, relationship to you, the amount of the gift, and the date of the transfer.
+            </p>
+          </div>
+          
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">Documentation</h5>
+            <p className="text-slate-700 text-sm">
+              Lenders will require documentation from the donor, including their bank statements to show the source of the funds and proof of the transfer into your account. Large, undocumented deposits ("large deposits") into your bank account can raise red flags for underwriters if they appear within 60-90 days of your application, so it's always best to have gift funds documented and transferred well in advance.
+            </p>
+          </div>
+          
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">Minimum Borrower Contribution</h5>
+            <p className="text-slate-700 text-sm">
+              Some loan programs may require a small minimum contribution from your own funds, even if gift funds are available. For example, for conventional loans with less than 20% down on a single-family home, all the down payment can be a gift. However, for a 2-4 unit conventional property, you might need 5% of the down payment to come from your own funds. FHA and VA loans are generally more flexible with gift funds.
+            </p>
           </div>
         </div>
+      </div>
+    </MinimalCard>
 
-        <div>
-          <h4 className="font-semibold text-slate-800 mb-3">What's the difference between "pre-qualification" and "pre-approval," and which do I need?</h4>
-          <p className="text-slate-700 mb-3">
-            These terms are often used interchangeably, but there's a significant difference in their rigor and value:
-          </p>
+    <MinimalCard title="What's the difference between 'pre-qualification' and 'pre-approval,' and which do I need?" expanded={preQualificationExpanded} onClick={() => setPreQualificationExpanded(!preQualificationExpanded)}>
+      <div className="space-y-4">
+        <p className="text-slate-700 mb-3">
+          These terms are often used interchangeably, but there's a significant difference in their rigor and value:
+        </p>
+        
+        <div className="space-y-3">
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">Pre-Qualification</h5>
+            <p className="text-slate-700 text-sm">
+              This is a preliminary, informal assessment of your borrowing power. It's typically based on basic financial information you provide verbally or via a simple online form, without verification. The lender estimates how much you might qualify for. It's a quick estimate but carries little weight in a competitive market.
+            </p>
+          </div>
           
-          <div className="space-y-3">
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <h5 className="font-semibold text-slate-800 mb-2">Pre-Qualification</h5>
-              <p className="text-slate-700 text-sm">
-                This is a preliminary, informal assessment of your borrowing power. It's typically based on basic financial information you provide verbally or via a simple online form, without verification. The lender estimates how much you might qualify for. It's a quick estimate but carries little weight in a competitive market.
-              </p>
-            </div>
-            
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <h5 className="font-semibold text-slate-800 mb-2">Pre-Approval</h5>
-              <p className="text-slate-700 text-sm">
-                This is a much more robust and formal process. A lender actually reviews and verifies your financial documents (pay stubs, W-2s, bank statements, credit report) to determine your maximum loan amount. They issue a pre-approval letter, a conditional commitment to lend, specifying the loan amount.
-              </p>
-            </div>
-            
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <h5 className="font-semibold text-slate-800 mb-2">Which You Need</h5>
-              <p className="text-slate-700 text-sm">
-                You need a pre-approval. In today's competitive housing market, a strong pre-approval letter is essential. It shows sellers you are a serious, qualified buyer whose financing is likely to go through, making your offer more appealing. It also clarifies your budget, preventing you from looking at homes outside your affordable range.
-              </p>
-            </div>
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">Pre-Approval</h5>
+            <p className="text-slate-700 text-sm">
+              This is a much more robust and formal process. A lender actually reviews and verifies your financial documents (pay stubs, W-2s, bank statements, credit report) to determine your maximum loan amount. They issue a pre-approval letter, a conditional commitment to lend, specifying the loan amount.
+            </p>
+          </div>
+          
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <h5 className="font-semibold text-slate-800 mb-2">Which You Need</h5>
+            <p className="text-slate-700 text-sm">
+              You need a pre-approval. In today's competitive housing market, a strong pre-approval letter is essential. It shows sellers you are a serious, qualified buyer whose financing is likely to go through, making your offer more appealing. It also clarifies your budget, preventing you from looking at homes outside your affordable range.
+            </p>
           </div>
         </div>
       </div>
