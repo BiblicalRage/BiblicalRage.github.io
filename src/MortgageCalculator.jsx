@@ -1054,19 +1054,21 @@ const MortgageCalculator = ({
                 
                 {showDTIGuidelines && (
                   <div className="mt-2 p-3 bg-slate-100 rounded-lg border border-slate-200 animate-fade-in">
-                    <div className="text-sm text-slate-700 space-y-1">
-                      <p><strong>Conventional Loans (Fannie Mae/Freddie Mac):</strong></p>
-                      <ul className="list-disc list-inside ml-2 space-y-1">
-                        <li>Front-end DTI: ≤28% (housing expenses)</li>
-                        <li>Back-end DTI: ≤36% (total debt)</li>
-                        <li>Back-end DTI may allow up to 50% with compensating factors</li>
-                      </ul>
-                      <p className="mt-2"><strong>FHA Loans:</strong></p>
-                      <ul className="list-disc list-inside ml-2 space-y-1">
-                        <li>Front-end DTI: ≤31% (housing expenses)</li>
-                        <li>Back-end DTI: ≤43% (total debt)</li>
-                        <li>May allow higher DTI with compensating factors</li>
-                      </ul>
+                    <div className="text-sm text-slate-700 space-y-2">
+                      <div>
+                        <p className="font-semibold text-slate-800">Conventional Loans (Fannie Mae/Freddie Mac):</p>
+                        <ul className="list-disc list-inside ml-2 space-y-1 mt-1">
+                          <li><strong>Standard Guidelines:</strong> Typically look for a Front-end DTI (housing expenses) of ≤28%-31% and a Back-end DTI (total debt) of ≤36%.</li>
+                          <li><strong>Flexibility with Automated Underwriting:</strong> Through the use of Automated Underwriting Systems (AUS), borrowers with strong compensating factors (e.g., high credit scores, significant cash reserves after closing, large down payments, stable employment) can often qualify with a Back-end DTI of up to 49.99% or occasionally 50%.</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-slate-800">FHA Loans:</p>
+                        <ul className="list-disc list-inside ml-2 space-y-1 mt-1">
+                          <li><strong>Standard Guidelines:</strong> Generally target a Front-end DTI (housing expenses) of ≤31% and a Back-end DTI (total debt) of ≤43%.</li>
+                          <li><strong>Enhanced Flexibility:</strong> FHA loans are known for greater leniency. With strong compensating factors (e.g., high credit scores, substantial reserves), FHA's underwriting system can approve higher DTIs, commonly into the mid-50% range (e.g., up to 56.9% back-end DTI).</li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 )}

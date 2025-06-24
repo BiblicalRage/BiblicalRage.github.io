@@ -137,6 +137,12 @@ const App = () => {
     }
   }, [currentView]);
 
+  // Synchronize mainTaxRate with individual tax rates
+  React.useEffect(() => {
+    const totalTaxRate = cityTaxRate + countyTaxRate + isdTaxRate + collegeTaxRate;
+    setMainTaxRate(totalTaxRate);
+  }, [cityTaxRate, countyTaxRate, isdTaxRate, collegeTaxRate]);
+
   if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
