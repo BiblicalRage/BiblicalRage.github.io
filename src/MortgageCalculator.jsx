@@ -547,21 +547,41 @@ const MortgageCalculator = ({
 
   // Prepare amortization data for display and chart
   const displaySchedule = showAllMonths ? amortization : amortization.slice(0, 12);
-  const chartData = baseAmortization.map((month, index) => {
-    const extraPaymentMonth = amortization[index] || { balance: 0 };
-    return {
-      month: index + 1,
-      balance: extraPaymentMonth.balance,
-      originalBalance: month.balance,
-      interest: month.interest,
-      principal: month.principal
-    };
-  });
+  const payoffYear = Math.ceil(payoffMonth / 12);
+  const chartData = groupAmortizationByYearFullTerm(amortization, baseAmortization, loanTerm, payoffYear);
 
   // Calculate DTI when income, debt, or housing expenses change
   useEffect(() => {
     calculateDTI();
   }, [monthlyIncome, otherDebts, housingExpenses, totalMonthly]);
+
+  // Helper to group amortization data by year for the graph, always up to full loan term
+  function groupAmortizationByYearFullTerm(amortization, baseAmortization, loanTermYears, payoffYear) {
+    const years = [];
+    for (let year = 1; year <= loanTermYears; year++) {
+      const monthIdx = year * 12 - 1;
+      const extra = amortization[Math.min(monthIdx, amortization.length - 1)] || { balance: 0 };
+      const base = baseAmortization[Math.min(monthIdx, baseAmortization.length - 1)] || { balance: 0 };
+      years.push({
+        year,
+        balance: year < payoffYear ? extra.balance : 0,
+        originalBalance: base.balance,
+        isPayoffYear: year === payoffYear
+      });
+    }
+    return years;
+  }
+
+  // Helper to format months as years and months
+  function formatYearsMonths(months) {
+    const years = Math.floor(months / 12);
+    const remMonths = months % 12;
+    let result = '';
+    if (years > 0) result += `${years} year${years > 1 ? 's' : ''}`;
+    if (years > 0 && remMonths > 0) result += ', ';
+    if (remMonths > 0) result += `${remMonths} month${remMonths > 1 ? 's' : ''}`;
+    return result || '0 months';
+  }
 
   return (
     <div className="w-full bg-white">
@@ -1090,13 +1110,20 @@ const MortgageCalculator = ({
             <div className="bg-slate-50 rounded-2xl shadow p-4 border border-slate-100 flex flex-col gap-2">
               <h4 className="text-base font-semibold text-slate-700 mb-2">Key Stats</h4>
               <div className="flex flex-col gap-1 text-slate-700 text-base">
+                <div className="flex justify-between items-center px-2 py-1 mb-1" style={{ background: '#e5e7eb', borderRadius: '8px' }}>
+                  <span className="font-semibold text-base">Total paid:</span>
+                  <span className="font-extrabold text-lg">{formatCurrency(loanAmount + totalInterest)}</span>
+                </div>
                 <div className="flex justify-between"><span>Total interest paid:</span><span className="font-semibold">{formatCurrency(totalInterest)}</span></div>
-                <div className="flex justify-between"><span>Loan payoff time:</span><span className="font-semibold">{payoffMonth} months</span></div>
+                <div className="flex justify-between"><span>Loan payoff time:</span><span className="font-semibold">{formatYearsMonths(payoffMonth)}</span></div>
                 {interestSaved > 0 && (
                   <div className="flex justify-between text-green-700"><span>Interest saved (with extra payment):</span><span className="font-semibold">{formatCurrency(interestSaved)}</span></div>
                 )}
                 {monthsSaved > 0 && (
-                  <div className="flex justify-between text-green-700"><span>Months saved (with extra payment):</span><span className="font-semibold">{monthsSaved}</span></div>
+                  <div className="flex justify-between text-green-700">
+                    <span>Months saved (with extra payment):</span>
+                    <span className="font-semibold">{formatYearsMonths(monthsSaved)}</span>
+                  </div>
                 )}
               </div>
             </div>
@@ -1133,18 +1160,54 @@ const MortgageCalculator = ({
                   /* Balance Chart */
                   <div className="bg-slate-50 rounded-lg p-4">
                     <h5 className="text-sm font-semibold text-slate-700 mb-2">Loan Balance Over Time</h5>
-                    <ResponsiveContainer width="100%" height={200}>
-                      <LineChart data={chartData}>
+                    <ResponsiveContainer width="100%" height={320}>
+                      <LineChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip formatter={(value) => formatCurrency(value)} />
+                        <XAxis
+                          dataKey="year"
+                          tick={({ x, y, payload, index }) => {
+                            const isPayoff = chartData[index]?.isPayoffYear;
+                            if (isPayoff) {
+                              return (
+                                <g>
+                                  <rect x={x - 16} y={y - 6} width={32} height={22} rx={6} fill="#80dac1" />
+                                  <text
+                                    x={x}
+                                    y={y + 10}
+                                    textAnchor="middle"
+                                    fontSize={15}
+                                    fontWeight={700}
+                                    fill="#fff"
+                                  >
+                                    {payload.value}
+                                  </text>
+                                </g>
+                              );
+                            }
+                            return (
+                              <text
+                                x={x}
+                                y={y + 10}
+                                textAnchor="middle"
+                                fontSize={12}
+                                fontWeight={400}
+                                fill="#222"
+                              >
+                                {payload.value}
+                              </text>
+                            );
+                          }}
+                          label={{ value: 'Year', position: 'insideBottom', offset: -5, fontSize: 13 }}
+                        />
+                        <YAxis tick={{ fontSize: 11 }} label={{ value: 'Balance', angle: -90, position: 'insideLeft', fontSize: 12 }} />
+                        <Tooltip formatter={(value) => formatCurrency(value)} labelFormatter={v => `Year ${v}`} />
                         <Line 
                           type="monotone" 
                           dataKey="originalBalance" 
                           stroke="#0077b6" 
                           strokeWidth={2} 
                           name="Original Schedule"
+                          dot={false}
                         />
                         <Line 
                           type="monotone" 
@@ -1152,6 +1215,7 @@ const MortgageCalculator = ({
                           stroke="#80dac1" 
                           strokeWidth={2} 
                           name="With Extra Payments"
+                          dot={false}
                         />
                       </LineChart>
                     </ResponsiveContainer>

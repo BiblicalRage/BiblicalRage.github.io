@@ -94,7 +94,6 @@ const Mortgage101Screen = ({
   economicIndicatorsExpanded, setEconomicIndicatorsExpanded,
   downPaymentCostsExpanded, setDownPaymentCostsExpanded,
   giftFundsExpanded, setGiftFundsExpanded,
-  preQualificationExpanded, setPreQualificationExpanded,
 }) => (
   <div className="section flex flex-col items-center">
     <div className="text-center mb-8">
