@@ -73,7 +73,7 @@ const App = () => {
   const [dtiPercentage, setDtiPercentage] = useState(10);
   const [frontEndDTI, setFrontEndDTI] = useState(0);
   const [backEndDTI, setBackEndDTI] = useState(10);
-  const [activeTab, setActiveTab] = useState('breakdown');
+  const [activeTab, setActiveTab] = useState('basic');
   const [showAmortization, setShowAmortization] = useState(false);
   const [showAllMonths, setShowAllMonths] = useState(false);
   const [amortizationView, setAmortizationView] = useState('graph'); // 'graph' or 'table'

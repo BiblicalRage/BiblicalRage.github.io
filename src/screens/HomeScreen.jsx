@@ -1,5 +1,6 @@
 import React from 'react';
 import MortgageCalculator from '../MortgageCalculator.jsx'; // Adjust path if needed
+import RefinanceCalculator from '../RefinanceCalculator.jsx'; // Import the new component
 
 // HomeScreen component receives props from App.jsx
 const HomeScreen = ({ 
@@ -67,68 +68,100 @@ const HomeScreen = ({
           Input your details below to instantly generate your personalized homebuyer readiness assessment.<br />
           <span style={{ fontWeight: 600 }}>Score based on your self-reported data. Estimates only, not a guarantee of pre-qualification.</span>
         </p>
-        <MortgageCalculator 
-          homePrice={homePrice}
-          setHomePrice={setHomePrice}
-          downPayment={downPayment}
-          setDownPayment={setDownPayment}
-          downPaymentPct={downPaymentPct}
-          setDownPaymentPct={setDownPaymentPct}
-          loanTerm={loanTerm}
-          setLoanTerm={setLoanTerm}
-          interestRate={interestRate}
-          setInterestRate={setInterestRate}
-          extraPayment={extraPayment}
-          setExtraPayment={setExtraPayment}
-          mainTaxRate={mainTaxRate}
-          setMainTaxRate={setMainTaxRate}
-          showAdvanced={showAdvanced}
-          setShowAdvanced={setShowAdvanced}
-          propertyTaxRate={propertyTaxRate}
-          setPropertyTaxRate={setPropertyTaxRate}
-          insuranceRate={insuranceRate}
-          setInsuranceRate={setInsuranceRate}
-          pmiRate={pmiRate}
-          setPmiRate={setPmiRate}
-          hoa={hoa}
-          setHoa={setHoa}
-          cityTaxRate={cityTaxRate}
-          setCityTaxRate={setCityTaxRate}
-          countyTaxRate={countyTaxRate}
-          setCountyTaxRate={setCountyTaxRate}
-          isdTaxRate={isdTaxRate}
-          setIsdTaxRate={setIsdTaxRate}
-          collegeTaxRate={collegeTaxRate}
-          setCollegeTaxRate={setCollegeTaxRate}
-          homesteadExemption={homesteadExemption}
-          setHomesteadExemption={setHomesteadExemption}
-          showDTI={showDTI}
-          setShowDTI={setShowDTI}
-          showDTIGuidelines={showDTIGuidelines}
-          setShowDTIGuidelines={setShowDTIGuidelines}
-          monthlyIncome={monthlyIncome}
-          setMonthlyIncome={setMonthlyIncome}
-          monthlyDebt={monthlyDebt}
-          setMonthlyDebt={setMonthlyDebt}
-          housingExpenses={housingExpenses}
-          setHousingExpenses={setHousingExpenses}
-          otherDebts={otherDebts}
-          setOtherDebts={setOtherDebts}
-          dtiPercentage={dtiPercentage}
-          setDtiPercentage={setDtiPercentage}
-          frontEndDTI={frontEndDTI}
-          setFrontEndDTI={setFrontEndDTI}
-          backEndDTI={backEndDTI}
-          setBackEndDTI={setBackEndDTI}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          showAmortization={showAmortization}
-          setShowAmortization={setShowAmortization}
-          showAllMonths={showAllMonths}
-          setShowAllMonths={setShowAllMonths}
-          amortizationView={amortizationView}
-          setAmortizationView={setAmortizationView}
-        />
+
+        {/* Tab Navigation */}
+        <div className="flex border-b border-slate-200 mb-6">
+          <button
+            onClick={() => setActiveTab('basic')}
+            className={`flex-1 py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'basic'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-slate-500 hover:text-slate-700'
+            }`}
+          >
+            Mortgage Calculator
+          </button>
+          <button
+            onClick={() => setActiveTab('refinance')}
+            className={`flex-1 py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'refinance'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-slate-500 hover:text-slate-700'
+            }`}
+          >
+            Refinance Calculator
+          </button>
+        </div>
+
+        {/* Tab Content */}
+        {activeTab === 'basic' && (
+          <MortgageCalculator 
+            homePrice={homePrice}
+            setHomePrice={setHomePrice}
+            downPayment={downPayment}
+            setDownPayment={setDownPayment}
+            downPaymentPct={downPaymentPct}
+            setDownPaymentPct={setDownPaymentPct}
+            loanTerm={loanTerm}
+            setLoanTerm={setLoanTerm}
+            interestRate={interestRate}
+            setInterestRate={setInterestRate}
+            extraPayment={extraPayment}
+            setExtraPayment={setExtraPayment}
+            mainTaxRate={mainTaxRate}
+            setMainTaxRate={setMainTaxRate}
+            showAdvanced={showAdvanced}
+            setShowAdvanced={setShowAdvanced}
+            propertyTaxRate={propertyTaxRate}
+            setPropertyTaxRate={setPropertyTaxRate}
+            insuranceRate={insuranceRate}
+            setInsuranceRate={setInsuranceRate}
+            pmiRate={pmiRate}
+            setPmiRate={setPmiRate}
+            hoa={hoa}
+            setHoa={setHoa}
+            cityTaxRate={cityTaxRate}
+            setCityTaxRate={setCityTaxRate}
+            countyTaxRate={countyTaxRate}
+            setCountyTaxRate={setCountyTaxRate}
+            isdTaxRate={isdTaxRate}
+            setIsdTaxRate={setIsdTaxRate}
+            collegeTaxRate={collegeTaxRate}
+            setCollegeTaxRate={setCollegeTaxRate}
+            homesteadExemption={homesteadExemption}
+            setHomesteadExemption={setHomesteadExemption}
+            showDTI={showDTI}
+            setShowDTI={setShowDTI}
+            showDTIGuidelines={showDTIGuidelines}
+            setShowDTIGuidelines={setShowDTIGuidelines}
+            monthlyIncome={monthlyIncome}
+            setMonthlyIncome={setMonthlyIncome}
+            monthlyDebt={monthlyDebt}
+            setMonthlyDebt={setMonthlyDebt}
+            housingExpenses={housingExpenses}
+            setHousingExpenses={setHousingExpenses}
+            otherDebts={otherDebts}
+            setOtherDebts={setOtherDebts}
+            dtiPercentage={dtiPercentage}
+            setDtiPercentage={setDtiPercentage}
+            frontEndDTI={frontEndDTI}
+            setFrontEndDTI={setFrontEndDTI}
+            backEndDTI={backEndDTI}
+            setBackEndDTI={setBackEndDTI}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            showAmortization={showAmortization}
+            setShowAmortization={setShowAmortization}
+            showAllMonths={showAllMonths}
+            setShowAllMonths={setShowAllMonths}
+            amortizationView={amortizationView}
+            setAmortizationView={setAmortizationView}
+          />
+        )}
+
+        {activeTab === 'refinance' && (
+          <RefinanceCalculator />
+        )}
       </div>
     </div>
   );

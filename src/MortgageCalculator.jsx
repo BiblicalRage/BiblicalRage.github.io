@@ -319,6 +319,8 @@ const MortgageCalculator = ({
   showAllMonths, setShowAllMonths,
   amortizationView, setAmortizationView
 }) => {
+  const [selectedSchedule, setSelectedSchedule] = useState('monthly'); // 'monthly' or 'biweekly'
+
   // Keep down payment and percent in sync
   const handleHomePriceChange = (value) => {
     setHomePrice(value);
@@ -392,8 +394,23 @@ const MortgageCalculator = ({
     0
   );
 
-  const interestSaved = baseInterest - totalInterest;
-  const monthsSaved = basePayoffMonth - payoffMonth;
+  // Calculate biweekly amortization for comparison
+  const biweeklyExtraPayment = (principalAndInterest / 12) + Number(extraPayment); // Biweekly extra + additional payments
+  const { schedule: biweeklyAmortization, totalInterest: biweeklyTotalInterest, payoffMonth: biweeklyPayoffMonth } = generateAmortizationSchedule(
+    loanAmount,
+    monthlyInterestRate,
+    numberOfPayments,
+    principalAndInterest,
+    biweeklyExtraPayment
+  );
+
+  // Use selected schedule for display
+  const displayAmortization = selectedSchedule === 'biweekly' ? biweeklyAmortization : amortization;
+  const displayTotalInterest = selectedSchedule === 'biweekly' ? biweeklyTotalInterest : totalInterest;
+  const displayPayoffMonth = selectedSchedule === 'biweekly' ? biweeklyPayoffMonth : payoffMonth;
+
+  const interestSaved = baseInterest - displayTotalInterest;
+  const monthsSaved = basePayoffMonth - displayPayoffMonth;
 
   // DTI Calculations
   const calculateDTI = () => {
@@ -546,9 +563,15 @@ const MortgageCalculator = ({
   const dtiStatus = getDTIStatus(preQualification.actualBackEndDTI);
 
   // Prepare amortization data for display and chart
-  const displaySchedule = showAllMonths ? amortization : amortization.slice(0, 12);
-  const payoffYear = Math.ceil(payoffMonth / 12);
-  const chartData = groupAmortizationByYearFullTerm(amortization, baseAmortization, loanTerm, payoffYear);
+  const displaySchedule = showAllMonths ? displayAmortization : displayAmortization.slice(0, 12);
+  const payoffYear = Math.ceil(displayPayoffMonth / 12);
+  
+  // For chart comparison, show the selected schedule with and without additional payments
+  const selectedScheduleWithoutExtra = selectedSchedule === 'biweekly' 
+    ? generateAmortizationSchedule(loanAmount, monthlyInterestRate, numberOfPayments, principalAndInterest, principalAndInterest / 12).schedule
+    : generateAmortizationSchedule(loanAmount, monthlyInterestRate, numberOfPayments, principalAndInterest, 0).schedule;
+  
+  const chartData = groupAmortizationByYearFullTerm(displayAmortization, selectedScheduleWithoutExtra, loanTerm, payoffYear);
 
   // Calculate DTI when income, debt, or housing expenses change
   useEffect(() => {
@@ -1108,28 +1131,165 @@ const MortgageCalculator = ({
               </label>
               <div className="flex items-center">
                 <FormattedNumberInput value={extraPayment} onChange={setExtraPayment} min={0} max={5000} step={10} className="input w-20 text-lg text-right rounded-full border-2 border-[var(--color-primary)]" />
-                <span className="text-slate-500 ml-2">/month</span>
+                <select 
+                  className="ml-2 px-2 py-1 pr-6 text-sm text-slate-500 focus:outline-none"
+                  defaultValue="monthly"
+                >
+                  <option value="monthly">/month</option>
+                  <option value="one-time">one-time</option>
+                  <option value="quarterly">/quarter</option>
+                  <option value="yearly">/year</option>
+                </select>
               </div>
-            </div>
-            {/* Key Stats Card */}
-            <div className="bg-slate-50 rounded-2xl shadow p-4 border border-slate-100 flex flex-col gap-2">
-              <h4 className="text-base font-semibold text-slate-700 mb-2">Key Stats</h4>
-              <div className="flex flex-col gap-1 text-slate-700 text-base">
-                <div className="flex justify-between items-center px-2 py-1 mb-1" style={{ background: '#e5e7eb', borderRadius: '8px' }}>
-                  <span className="font-semibold text-base">Total paid:</span>
-                  <span className="font-extrabold text-lg">{formatCurrency(loanAmount + totalInterest)}</span>
-                </div>
-                <div className="flex justify-between"><span>Total interest paid:</span><span className="font-semibold">{formatCurrency(totalInterest)}</span></div>
-                <div className="flex justify-between"><span>Loan payoff time:</span><span className="font-semibold">{formatYearsMonths(payoffMonth)}</span></div>
-                {interestSaved > 0 && (
-                  <div className="flex justify-between text-green-700"><span>Interest saved (with extra payment):</span><span className="font-semibold">{formatCurrency(interestSaved)}</span></div>
-                )}
-                {monthsSaved > 0 && (
-                  <div className="flex justify-between text-green-700">
-                    <span>Months saved (with extra payment):</span>
-                    <span className="font-semibold">{formatYearsMonths(monthsSaved)}</span>
-                  </div>
-                )}
+              
+              {/* Biweekly Payment Schedule Option */}
+              <div className="mt-4 pt-4 border-t border-slate-200">
+                <label className="block text-slate-700 font-semibold mb-2 flex items-center gap-1">
+                  Payment Schedule Options
+                  <InfoTooltip text="Compare monthly vs biweekly payment schedules. Biweekly payments (26 per year) can reduce your loan term and total interest." />
+                </label>
+                
+                {(() => {
+                  // Calculate biweekly payment (monthly payment / 2)
+                  const biweeklyPayment = principalAndInterest / 2;
+                  
+                  // Calculate biweekly schedule impact
+                  // 26 biweekly payments per year = 13 monthly payments worth
+                  // This effectively adds 1 extra monthly payment per year
+                  const extraMonthlyPaymentPerYear = principalAndInterest;
+                  const totalExtraPayments = Math.floor(loanTerm) * extraMonthlyPaymentPerYear;
+                  
+                  // Calculate new loan term with biweekly payments PLUS additional payments
+                  const biweeklyAmortization = generateAmortizationSchedule(
+                    loanAmount,
+                    monthlyInterestRate,
+                    numberOfPayments,
+                    principalAndInterest,
+                    (extraMonthlyPaymentPerYear / 12) + Number(extraPayment) // Biweekly extra + user's additional payments
+                  );
+                  
+                  const biweeklyPayoffMonth = biweeklyAmortization.payoffMonth;
+                  const biweeklyTotalInterest = biweeklyAmortization.totalInterest;
+                  const biweeklyYearsSaved = (loanTerm * 12 - biweeklyPayoffMonth) / 12;
+                  const biweeklyInterestSaved = totalInterest - biweeklyTotalInterest;
+                  
+                  // Calculate biweekly-only impact (without additional payments) for comparison
+                  const biweeklyOnlyAmortization = generateAmortizationSchedule(
+                    loanAmount,
+                    monthlyInterestRate,
+                    numberOfPayments,
+                    principalAndInterest,
+                    extraMonthlyPaymentPerYear / 12 // Just biweekly extra, no additional payments
+                  );
+                  
+                  const biweeklyOnlyInterestSaved = totalInterest - biweeklyOnlyAmortization.totalInterest;
+                  const biweeklyOnlyYearsSaved = (loanTerm * 12 - biweeklyOnlyAmortization.payoffMonth) / 12;
+                  
+                  return (
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div 
+                          className={`rounded-lg p-3 cursor-pointer transition-all duration-200 ${
+                            selectedSchedule === 'monthly' 
+                              ? 'bg-slate-100 border-2 border-slate-300' 
+                              : 'bg-slate-50 border border-slate-200'
+                          }`}
+                          onClick={() => setSelectedSchedule('monthly')}
+                        >
+                          <h5 className="text-sm font-semibold text-slate-700 mb-2">Monthly Schedule</h5>
+                          <div className="space-y-1 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Payment:</span>
+                              <span className="font-semibold">{formatCurrency(principalAndInterest)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Payments/year:</span>
+                              <span className="font-semibold">12</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Total interest:</span>
+                              <span className="font-semibold">{formatCurrency(totalInterest)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600 font-semibold">Total amount paid:</span>
+                              <span className="font-bold">{formatCurrency(loanAmount + totalInterest)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Payoff time:</span>
+                              <span className="font-semibold">{formatYearsMonths(payoffMonth)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Years saved:</span>
+                              <span className={`font-semibold ${(basePayoffMonth - payoffMonth) / 12 > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
+                                {(basePayoffMonth - payoffMonth) / 12 > 0 ? ((basePayoffMonth - payoffMonth) / 12).toFixed(1) : '0'} years
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Interest saved:</span>
+                              <span className={`font-semibold ${interestSaved > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
+                                {interestSaved > 0 ? formatCurrency(interestSaved) : '$0'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div 
+                          className={`rounded-lg p-3 cursor-pointer transition-all duration-200 ${
+                            selectedSchedule === 'biweekly' 
+                              ? 'bg-slate-100 border-2 border-slate-300' 
+                              : 'bg-slate-50 border border-slate-200'
+                          }`}
+                          onClick={() => setSelectedSchedule('biweekly')}
+                        >
+                          <h5 className="text-sm font-semibold text-slate-700 mb-2">Biweekly Schedule</h5>
+                          <div className="space-y-1 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Payment:</span>
+                              <span className="font-semibold">{formatCurrency(biweeklyPayment)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Payments/year:</span>
+                              <span className="font-semibold">26</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Total interest:</span>
+                              <span className="font-semibold">{formatCurrency(biweeklyTotalInterest)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600 font-semibold">Total amount paid:</span>
+                              <span className="font-bold">{formatCurrency(loanAmount + biweeklyTotalInterest)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Payoff time:</span>
+                              <span className="font-semibold">{formatYearsMonths(biweeklyPayoffMonth)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Years saved:</span>
+                              <span className={`font-semibold ${biweeklyYearsSaved > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
+                                {biweeklyYearsSaved.toFixed(1)} years
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-600">Interest saved:</span>
+                              <span className={`font-semibold ${biweeklyInterestSaved > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
+                                {formatCurrency(biweeklyInterestSaved)}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Biweekly Savings Summary */}
+                      <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                        <h6 className="text-sm font-semibold text-slate-700 mb-2">Biweekly Schedule Benefits</h6>
+                        <p className="text-xs text-slate-500 mt-2">
+                          Biweekly payments add 1 extra monthly payment per year, reducing your loan term and total interest.
+                          {extraPayment > 0 && ` Combined with your additional ${formatCurrency(extraPayment)}/month payment.`}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
             {/* Amortization Schedule */}
@@ -1165,56 +1325,27 @@ const MortgageCalculator = ({
                   /* Balance Chart */
                   <div className="bg-slate-50 rounded-lg p-4">
                     <h5 className="text-sm font-semibold text-slate-700 mb-2">Loan Balance Over Time</h5>
-                    <ResponsiveContainer width="100%" height={window.innerWidth < 768 ? 280 : 320}>
-                      <LineChart data={chartData} margin={{ top: 10, right: 20, left: 10, bottom: 30 }}>
+                    <ResponsiveContainer width="100%" height={320}>
+                      <LineChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis
                           dataKey="year"
-                          tick={({ x, y, payload, index }) => {
-                            const isPayoff = chartData[index]?.isPayoffYear;
-                            const isMobile = window.innerWidth < 768;
-                            const fontSize = isMobile ? 10 : 12;
-                            
-                            if (isPayoff) {
-                              return (
-                                <g>
-                                  <rect x={x - 16} y={y - 6} width={32} height={22} rx={6} fill="#80dac1" />
-                                  <text
-                                    x={x}
-                                    y={y + 10}
-                                    textAnchor="middle"
-                                    fontSize={isMobile ? 12 : 15}
-                                    fontWeight={700}
-                                    fill="#fff"
-                                  >
-                                    {payload.value}
-                                  </text>
-                                </g>
-                              );
-                            }
-                            return (
-                              <text
-                                x={x}
-                                y={y + 10}
-                                textAnchor="middle"
-                                fontSize={fontSize}
-                                fontWeight={400}
-                                fill="#222"
-                              >
-                                {payload.value}
-                              </text>
-                            );
-                          }}
-                          label={{ 
-                            value: 'Year', 
-                            position: 'insideBottom', 
-                            offset: window.innerWidth < 768 ? -15 : -5, 
-                            fontSize: window.innerWidth < 768 ? 11 : 13 
-                          }}
-                          interval={0}
+                          tick={({ x, y, payload }) => (
+                            <text
+                              x={x}
+                              y={y + 10}
+                              textAnchor="middle"
+                              fontSize={12}
+                              fontWeight={400}
+                              fill="#222"
+                            >
+                              {payload.value}
+                            </text>
+                          )}
+                          label={{ value: 'Year', position: 'insideBottom', offset: -5, fontSize: 13 }}
                         />
                         <YAxis 
-                          tick={{ fontSize: window.innerWidth < 768 ? 9 : 11 }} 
+                          tick={{ fontSize: 11 }} 
                           tickFormatter={(value) => {
                             if (value >= 1000000) {
                               return `$${(value / 1000000).toFixed(1)}M`;
@@ -1223,12 +1354,7 @@ const MortgageCalculator = ({
                             }
                             return `$${value.toLocaleString()}`;
                           }}
-                          label={{ 
-                            value: 'Balance', 
-                            angle: -90, 
-                            position: 'insideLeft', 
-                            fontSize: window.innerWidth < 768 ? 10 : 12 
-                          }} 
+                          label={{ value: 'Balance', angle: -90, position: 'insideLeft', fontSize: 12 }} 
                         />
                         <Tooltip formatter={(value) => formatCurrency(value)} labelFormatter={v => `Year ${v}`} />
                         <Line 
@@ -1236,7 +1362,7 @@ const MortgageCalculator = ({
                           dataKey="originalBalance" 
                           stroke="#0077b6" 
                           strokeWidth={2} 
-                          name="Original Schedule"
+                          name={`${selectedSchedule === 'biweekly' ? 'Biweekly' : 'Monthly'} Schedule`}
                           dot={false}
                         />
                         <Line 
@@ -1244,7 +1370,7 @@ const MortgageCalculator = ({
                           dataKey="balance" 
                           stroke="#80dac1" 
                           strokeWidth={2} 
-                          name="With Extra Payments"
+                          name={`${selectedSchedule === 'biweekly' ? 'Biweekly' : 'Monthly'} + Additional Payments`}
                           dot={false}
                         />
                       </LineChart>
@@ -1252,11 +1378,11 @@ const MortgageCalculator = ({
                     <div className="flex justify-center gap-4 mt-2 text-xs text-slate-600">
                       <div className="flex items-center gap-1">
                         <div className="w-3 h-0.5 bg-blue-600"></div>
-                        <span>Original Schedule</span>
+                        <span>{selectedSchedule === 'biweekly' ? 'Biweekly' : 'Monthly'} Schedule</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <div className="w-3 h-0.5 bg-teal-400"></div>
-                        <span>With Extra Payments</span>
+                        <span>{selectedSchedule === 'biweekly' ? 'Biweekly' : 'Monthly'} + Additional Payments</span>
                       </div>
                     </div>
                   </div>
@@ -1302,13 +1428,13 @@ const MortgageCalculator = ({
                 )}
                 
                 {/* Show More/Less Button - only for table view */}
-                {amortizationView === 'table' && amortization.length > 12 && (
+                {amortizationView === 'table' && displayAmortization.length > 12 && (
                   <div className="text-center">
                     <button
                       onClick={() => setShowAllMonths(!showAllMonths)}
                       className="text-sm text-blue-600 hover:text-blue-800 underline"
                     >
-                      {showAllMonths ? 'Show First 12 Months' : `Show All ${amortization.length} Months`}
+                      {showAllMonths ? 'Show First 12 Months' : `Show All ${displayAmortization.length} Months`}
                     </button>
                   </div>
                 )}
