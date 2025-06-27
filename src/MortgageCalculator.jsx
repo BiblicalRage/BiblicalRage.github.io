@@ -1211,91 +1211,95 @@ const MortgageCalculator = ({
                     <div className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div 
-                          className={`rounded-lg p-3 cursor-pointer transition-all duration-200 ${
+                          className={`rounded-lg p-3 cursor-pointer transition-all duration-200 h-[220px] flex flex-col border-2 ${
                             selectedSchedule === 'monthly' 
-                              ? 'bg-slate-100 border-2 border-slate-300' 
-                              : 'bg-slate-50 border border-slate-200'
+                              ? 'bg-slate-100 border-slate-300' 
+                              : 'bg-slate-50 border-slate-200'
                           }`}
                           onClick={() => setSelectedSchedule('monthly')}
                         >
                           <h5 className="text-sm font-semibold text-slate-700 mb-2">Monthly Schedule</h5>
-                          <div className="space-y-1 text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Payment:</span>
-                              <span className="font-semibold">{formatCurrency(principalAndInterest)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Payments/year:</span>
-                              <span className="font-semibold">12</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Total interest:</span>
-                              <span className="font-semibold">{formatCurrency(monthlyWithExtraTotalInterest)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600 font-semibold">Total amount paid:</span>
-                              <span className="font-bold">{formatCurrency(loanAmount + monthlyWithExtraTotalInterest)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Payoff time:</span>
-                              <span className="font-semibold">{formatYearsMonths(monthlyWithExtraPayoffMonth)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Years saved:</span>
-                              <span className={`font-semibold ${(basePayoffMonth - monthlyWithExtraPayoffMonth) / 12 > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
-                                {(basePayoffMonth - monthlyWithExtraPayoffMonth) / 12 > 0 ? ((basePayoffMonth - monthlyWithExtraPayoffMonth) / 12).toFixed(1) : '0'} years
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Interest saved:</span>
-                              <span className={`font-semibold ${(baseInterest - monthlyWithExtraTotalInterest) > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
-                                {(baseInterest - monthlyWithExtraTotalInterest) > 0 ? formatCurrency(baseInterest - monthlyWithExtraTotalInterest) : '$0'}
-                              </span>
+                          <div className="space-y-1 text-sm flex-1 flex flex-col justify-between">
+                            <div className="space-y-1">
+                              <div className="flex justify-between">
+                                <span className="text-slate-600">Payment:</span>
+                                <span className="font-semibold">{formatCurrency(principalAndInterest)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-slate-600">Payments/year:</span>
+                                <span className="font-semibold">12</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-slate-600">Total interest:</span>
+                                <span className="font-semibold">{formatCurrency(monthlyWithExtraTotalInterest)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-slate-600 font-semibold">Total amount paid:</span>
+                                <span className="font-bold">{formatCurrency(loanAmount + monthlyWithExtraTotalInterest)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-slate-600">Payoff time:</span>
+                                <span className="font-semibold">{formatYearsMonths(monthlyWithExtraPayoffMonth)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-slate-600">Years saved:</span>
+                                <span className={`font-semibold ${(basePayoffMonth - monthlyWithExtraPayoffMonth) / 12 > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
+                                  {(basePayoffMonth - monthlyWithExtraPayoffMonth) / 12 > 0 ? ((basePayoffMonth - monthlyWithExtraPayoffMonth) / 12).toFixed(1) : '0'} years
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-slate-600">Interest saved:</span>
+                                <span className={`font-semibold ${(baseInterest - monthlyWithExtraTotalInterest) > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
+                                  {(baseInterest - monthlyWithExtraTotalInterest) > 0 ? formatCurrency(baseInterest - monthlyWithExtraTotalInterest) : '$0'}
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
                         
                         <div 
-                          className={`rounded-lg p-3 cursor-pointer transition-all duration-200 ${
+                          className={`rounded-lg p-3 cursor-pointer transition-all duration-200 h-[220px] flex flex-col border-2 ${
                             selectedSchedule === 'biweekly' 
-                              ? 'bg-slate-100 border-2 border-slate-300' 
-                              : 'bg-slate-50 border border-slate-200'
+                              ? 'bg-slate-100 border-slate-300' 
+                              : 'bg-slate-50 border-slate-200'
                           }`}
                           onClick={() => setSelectedSchedule('biweekly')}
                         >
                           <h5 className="text-sm font-semibold text-slate-700 mb-2">Biweekly Schedule</h5>
-                          <div className="space-y-1 text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Payment:</span>
-                              <span className="font-semibold">{formatCurrency(biweeklyPayment)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Payments/year:</span>
-                              <span className="font-semibold">26</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Total interest:</span>
-                              <span className="font-semibold">{formatCurrency(biweeklyTotalInterest)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600 font-semibold">Total amount paid:</span>
-                              <span className="font-bold">{formatCurrency(loanAmount + biweeklyTotalInterest)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Payoff time:</span>
-                              <span className="font-semibold">{formatYearsMonths(biweeklyPayoffMonth)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Years saved:</span>
-                              <span className={`font-semibold ${biweeklyYearsSaved > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
-                                {biweeklyYearsSaved.toFixed(1)} years
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-slate-600">Interest saved:</span>
-                              <span className={`font-semibold ${biweeklyInterestSaved > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
-                                {formatCurrency(biweeklyInterestSaved)}
-                              </span>
+                          <div className="space-y-1 text-sm flex-1 flex flex-col justify-between">
+                            <div className="space-y-1">
+                              <div className="flex justify-between">
+                                <span className="text-slate-600">Payment:</span>
+                                <span className="font-semibold">{formatCurrency(biweeklyPayment)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-slate-600">Payments/year:</span>
+                                <span className="font-semibold">26</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-slate-600">Total interest:</span>
+                                <span className="font-semibold">{formatCurrency(biweeklyTotalInterest)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-slate-600 font-semibold">Total amount paid:</span>
+                                <span className="font-bold">{formatCurrency(loanAmount + biweeklyTotalInterest)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-slate-600">Payoff time:</span>
+                                <span className="font-semibold">{formatYearsMonths(biweeklyPayoffMonth)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-slate-600">Years saved:</span>
+                                <span className={`font-semibold ${biweeklyYearsSaved > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
+                                  {biweeklyYearsSaved.toFixed(1)} years
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-slate-600">Interest saved:</span>
+                                <span className={`font-semibold ${biweeklyInterestSaved > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
+                                  {formatCurrency(biweeklyInterestSaved)}
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
