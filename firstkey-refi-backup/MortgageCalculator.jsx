@@ -317,7 +317,12 @@ const MortgageCalculator = ({
   activeTab, setActiveTab,
   showAmortization, setShowAmortization,
   showAllMonths, setShowAllMonths,
-  amortizationView, setAmortizationView
+  amortizationView, setAmortizationView,
+  loanMode, setLoanMode,
+  currentLoanBalance, setCurrentLoanBalance,
+  currentInterestRate, setCurrentInterestRate,
+  currentYearsRemaining, setCurrentYearsRemaining,
+  cashOutAmount, setCashOutAmount
 }) => {
   // Keep down payment and percent in sync
   const handleHomePriceChange = (value) => {
@@ -558,22 +563,17 @@ const MortgageCalculator = ({
   // Helper to group amortization data by year for the graph, always up to full loan term
   function groupAmortizationByYearFullTerm(amortization, baseAmortization, loanTermYears, payoffYear) {
     const years = [];
-    // Always show fixed 5-year increments: 1, 5, 10, 15, 20, 25, 30
-    const fixedYears = [1, 5, 10, 15, 20, 25, 30];
-    
-    fixedYears.forEach(year => {
-      if (year <= loanTermYears) {
-        const monthIdx = year * 12 - 1;
-        const extra = amortization[Math.min(monthIdx, amortization.length - 1)] || { balance: 0 };
-        const base = baseAmortization[Math.min(monthIdx, baseAmortization.length - 1)] || { balance: 0 };
-        years.push({
-          year,
-          balance: year < payoffYear ? extra.balance : 0,
-          originalBalance: base.balance,
-          isPayoffYear: year === payoffYear
-        });
-      }
-    });
+    for (let year = 1; year <= loanTermYears; year++) {
+      const monthIdx = year * 12 - 1;
+      const extra = amortization[Math.min(monthIdx, amortization.length - 1)] || { balance: 0 };
+      const base = baseAmortization[Math.min(monthIdx, baseAmortization.length - 1)] || { balance: 0 };
+      years.push({
+        year,
+        balance: year < payoffYear ? extra.balance : 0,
+        originalBalance: base.balance,
+        isPayoffYear: year === payoffYear
+      });
+    }
     return years;
   }
 
@@ -588,16 +588,164 @@ const MortgageCalculator = ({
     return result || '0 months';
   }
 
+  // --- Refinance Calculations ---
+  let refinanceResults = null;
+  if (loanMode === 'refinance' && currentLoanBalance > 0 && currentInterestRate > 0 && currentYearsRemaining > 0) {
+    // Old loan
+    const oldMonthlyRate = currentInterestRate / 100 / 12;
+    const oldNumPayments = currentYearsRemaining * 12;
+    const oldMonthlyPayment = oldMonthlyRate > 0
+      ? currentLoanBalance * (oldMonthlyRate * Math.pow(1 + oldMonthlyRate, oldNumPayments)) / (Math.pow(1 + oldMonthlyRate, oldNumPayments) - 1)
+      : currentLoanBalance / oldNumPayments;
+    const oldTotalInterest = oldMonthlyPayment * oldNumPayments - currentLoanBalance;
+
+    // New loan
+    const newLoanAmount = Number(currentLoanBalance) + Number(cashOutAmount || 0);
+    const newMonthlyRate = interestRate / 100 / 12;
+    const newNumPayments = loanTerm * 12;
+    const newMonthlyPayment = newMonthlyRate > 0
+      ? newLoanAmount * (newMonthlyRate * Math.pow(1 + newMonthlyRate, newNumPayments)) / (Math.pow(1 + newMonthlyRate, newNumPayments) - 1)
+      : newLoanAmount / newNumPayments;
+    const newTotalInterest = newMonthlyPayment * newNumPayments - newLoanAmount;
+
+    // Savings
+    const monthlySavings = oldMonthlyPayment - newMonthlyPayment;
+    const totalInterestSaved = oldTotalInterest - newTotalInterest;
+    // Assume $3,000 closing costs for break-even calculation (customize as needed)
+    const closingCosts = 3000;
+    const breakEvenMonths = monthlySavings > 0 ? Math.ceil(closingCosts / monthlySavings) : null;
+
+    refinanceResults = {
+      oldMonthlyPayment,
+      newMonthlyPayment,
+      monthlySavings,
+      totalInterestSaved,
+      breakEvenMonths,
+      closingCosts,
+      newLoanAmount,
+    };
+  }
+
+  // --- Sync home price to current loan balance + cash out in refinance mode ---
+  useEffect(() => {
+    if (loanMode === 'refinance') {
+      const targetPrice = Number(currentLoanBalance || 0) + Number(cashOutAmount || 0);
+      if (homePrice !== targetPrice) {
+        setHomePrice(targetPrice);
+      }
+    }
+    // Do not sync in purchase mode
+    // eslint-disable-next-line
+  }, [loanMode, currentLoanBalance, cashOutAmount]);
+
   return (
-    <div className="w-full bg-white">
+    <div className="max-w-3xl mx-auto p-4 md:p-8 bg-white rounded-2xl shadow-lg border border-slate-100 mt-4 mb-8 animate-fade-in">
+      {/* Purchase/Refinance Toggle and Title */}
+      <div className="mb-6">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center bg-slate-100 rounded-lg p-1">
+            <button
+              onClick={() => setLoanMode('purchase')}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                loanMode === 'purchase'
+                  ? 'bg-white text-slate-700 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+              aria-pressed={loanMode === 'purchase'}
+            >
+              Purchase
+            </button>
+            <button
+              onClick={() => setLoanMode('refinance')}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                loanMode === 'refinance'
+                  ? 'bg-white text-slate-700 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+              aria-pressed={loanMode === 'refinance'}
+            >
+              Refinance
+            </button>
+          </div>
+        </div>
+        <h2 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-slate-900 mt-4 tracking-tight">
+          Mortgage Calculator
+        </h2>
+      </div>
+      {/* Refinance-specific Inputs */}
+      {loanMode === 'refinance' && (
+        <div className="mb-6 bg-slate-50 rounded-xl p-4 border border-slate-200 flex flex-col gap-4">
+          <div>
+            <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1 text-sm md:text-base">
+              Current loan balance
+              <InfoTooltip text="The remaining principal on your current mortgage." />
+            </label>
+            <FormattedNumberInput
+              value={currentLoanBalance || ''}
+              onChange={v => setCurrentLoanBalance(v)}
+              min={0}
+              max={2000000}
+              step={1000}
+              className="input w-full text-base md:text-lg text-right rounded-full border-2 border-[var(--color-primary)]"
+              style={{ fontWeight: 600 }}
+            />
+          </div>
+          <div>
+            <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1 text-sm md:text-base">
+              Current interest rate
+              <InfoTooltip text="The interest rate on your existing mortgage." />
+            </label>
+            <input
+              type="number"
+              value={currentInterestRate || ''}
+              onChange={e => setCurrentInterestRate(Number(e.target.value))}
+              min={0}
+              max={20}
+              step={0.01}
+              className="input w-full text-base md:text-lg text-right rounded-full border-2 border-[var(--color-primary)]"
+              style={{ fontWeight: 600 }}
+            />
+            <span className="text-slate-500 ml-2">%</span>
+          </div>
+          <div>
+            <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1 text-sm md:text-base">
+              Years remaining on current loan
+              <InfoTooltip text="How many years are left on your current mortgage term?" />
+            </label>
+            <input
+              type="number"
+              value={currentYearsRemaining || ''}
+              onChange={e => setCurrentYearsRemaining(Number(e.target.value))}
+              min={0}
+              max={40}
+              step={1}
+              className="input w-full text-base md:text-lg text-right rounded-full border-2 border-[var(--color-primary)]"
+              style={{ fontWeight: 600 }}
+            />
+            <span className="text-slate-500 ml-2">years</span>
+          </div>
+          <div>
+            <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1 text-sm md:text-base">
+              Cash-out amount (optional)
+              <InfoTooltip text="If you want to take cash out when refinancing, enter the desired amount here. Leave blank if not applicable." />
+            </label>
+            <FormattedNumberInput
+              value={cashOutAmount || ''}
+              onChange={v => setCashOutAmount(v)}
+              min={0}
+              max={2000000}
+              step={1000}
+              className="input w-full text-base md:text-lg text-right rounded-full border-2 border-[var(--color-accent)]"
+              style={{ fontWeight: 600 }}
+              placeholder="0 (optional)"
+            />
+          </div>
+        </div>
+      )}
       <div className="w-full max-w-4xl mx-auto bg-white">
         <div className="flex flex-col gap-4 md:gap-6 lg:gap-8 p-3 md:p-4 lg:p-8">
           {/* Inputs */}
           <div className="w-full flex flex-col gap-4 md:gap-6 lg:gap-8">
-            <h2 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-slate-900 mb-2 tracking-tight">
-              Mortgage Calculator
-            </h2>
-            
             {/* Debt-to-Income Ratio Section - AT THE TOP */}
             <div className="bg-white rounded-2xl shadow p-3 md:p-4 border border-slate-100">
               <button
@@ -1112,7 +1260,7 @@ const MortgageCalculator = ({
               </div>
             </div>
             {/* Key Stats Card */}
-            <div className="bg-slate-50 rounded-2xl shadow p-4 border border-slate-100 flex flex-col gap-2">
+            <div className="bg-slate-50 rounded-2xl shadow p-4 border border-slate-100">
               <h4 className="text-base font-semibold text-slate-700 mb-2">Key Stats</h4>
               <div className="flex flex-col gap-1 text-slate-700 text-base">
                 <div className="flex justify-between items-center px-2 py-1 mb-1" style={{ background: '#e5e7eb', borderRadius: '8px' }}>
@@ -1165,16 +1313,13 @@ const MortgageCalculator = ({
                   /* Balance Chart */
                   <div className="bg-slate-50 rounded-lg p-4">
                     <h5 className="text-sm font-semibold text-slate-700 mb-2">Loan Balance Over Time</h5>
-                    <ResponsiveContainer width="100%" height={window.innerWidth < 768 ? 280 : 320}>
-                      <LineChart data={chartData} margin={{ top: 10, right: 20, left: 10, bottom: 30 }}>
+                    <ResponsiveContainer width="100%" height={320}>
+                      <LineChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis
                           dataKey="year"
                           tick={({ x, y, payload, index }) => {
                             const isPayoff = chartData[index]?.isPayoffYear;
-                            const isMobile = window.innerWidth < 768;
-                            const fontSize = isMobile ? 10 : 12;
-                            
                             if (isPayoff) {
                               return (
                                 <g>
@@ -1183,7 +1328,7 @@ const MortgageCalculator = ({
                                     x={x}
                                     y={y + 10}
                                     textAnchor="middle"
-                                    fontSize={isMobile ? 12 : 15}
+                                    fontSize={15}
                                     fontWeight={700}
                                     fill="#fff"
                                   >
@@ -1197,7 +1342,7 @@ const MortgageCalculator = ({
                                 x={x}
                                 y={y + 10}
                                 textAnchor="middle"
-                                fontSize={fontSize}
+                                fontSize={12}
                                 fontWeight={400}
                                 fill="#222"
                               >
@@ -1205,31 +1350,9 @@ const MortgageCalculator = ({
                               </text>
                             );
                           }}
-                          label={{ 
-                            value: 'Year', 
-                            position: 'insideBottom', 
-                            offset: window.innerWidth < 768 ? -15 : -5, 
-                            fontSize: window.innerWidth < 768 ? 11 : 13 
-                          }}
-                          interval={0}
+                          label={{ value: 'Year', position: 'insideBottom', offset: -5, fontSize: 13 }}
                         />
-                        <YAxis 
-                          tick={{ fontSize: window.innerWidth < 768 ? 9 : 11 }} 
-                          tickFormatter={(value) => {
-                            if (value >= 1000000) {
-                              return `$${(value / 1000000).toFixed(1)}M`;
-                            } else if (value >= 1000) {
-                              return `$${(value / 1000).toFixed(0)}K`;
-                            }
-                            return `$${value.toLocaleString()}`;
-                          }}
-                          label={{ 
-                            value: 'Balance', 
-                            angle: -90, 
-                            position: 'insideLeft', 
-                            fontSize: window.innerWidth < 768 ? 10 : 12 
-                          }} 
-                        />
+                        <YAxis tick={{ fontSize: 11 }} label={{ value: 'Balance', angle: -90, position: 'insideLeft', fontSize: 12 }} />
                         <Tooltip formatter={(value) => formatCurrency(value)} labelFormatter={v => `Year ${v}`} />
                         <Line 
                           type="monotone" 
@@ -1314,6 +1437,71 @@ const MortgageCalculator = ({
                 )}
               </div>
             </div>
+            {/* Refinance Results Section */}
+            {loanMode === 'refinance' && refinanceResults && (
+              <div className="mb-6 bg-blue-50 rounded-xl p-4 border border-blue-200 flex flex-col gap-3 animate-fade-in">
+                <h3 className="text-lg font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                  Refinance Savings Analysis
+                  <InfoTooltip text="Compare your current loan to your new refinance scenario. These estimates help you understand potential savings and costs." />
+                </h3>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex-1 space-y-2">
+                    <div className="flex justify-between items-center border-b border-blue-100 pb-1">
+                      <span className="flex items-center gap-1">Old monthly payment <InfoTooltip text="Your current monthly principal & interest payment." /></span>
+                      <span className="font-semibold">{formatCurrency(refinanceResults.oldMonthlyPayment)}</span>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-blue-100 pb-1">
+                      <span className="flex items-center gap-1">New monthly payment <InfoTooltip text="Your projected monthly payment after refinancing." /></span>
+                      <span className="font-semibold">{formatCurrency(refinanceResults.newMonthlyPayment)}</span>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-blue-100 pb-1">
+                      <span className="flex items-center gap-1">Estimated monthly savings <InfoTooltip text="How much less you pay each month after refinancing." /></span>
+                      <span className="font-bold text-2xl text-green-700">{formatCurrency(refinanceResults.monthlySavings)}</span>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-blue-100 pb-1">
+                      <span className="flex items-center gap-1">Total interest saved <InfoTooltip text="How much less interest you pay over the life of the new loan compared to your current loan." /></span>
+                      <span className="font-bold text-lg text-green-700">{formatCurrency(refinanceResults.totalInterestSaved)}</span>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-blue-100 pb-1">
+                      <span className="flex items-center gap-1">Break-even point <InfoTooltip text="How many months it takes for your monthly savings to cover estimated closing costs." /></span>
+                      <span className="font-semibold">{refinanceResults.breakEvenMonths ? `${refinanceResults.breakEvenMonths} months` : 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-blue-100 pb-1">
+                      <span className="flex items-center gap-1">Estimated closing costs <InfoTooltip text="Typical costs to complete a refinance. Actual costs may vary." /></span>
+                      <span className="font-semibold">{formatCurrency(refinanceResults.closingCosts)}</span>
+                    </div>
+                    {cashOutAmount > 0 && (
+                      <div className="flex justify-between items-center border-b border-blue-100 pb-1">
+                        <span className="flex items-center gap-1">New loan amount (with cash-out) <InfoTooltip text="Your new mortgage balance if you take cash out." /></span>
+                        <span className="font-semibold">{formatCurrency(refinanceResults.newLoanAmount)}</span>
+                      </div>
+                    )}
+                    {/* Back-End DTI (with new payment) */}
+                    <div className="flex justify-between items-center border-b border-blue-100 pb-1">
+                      <span className="flex items-center gap-1">Back-End DTI (with new payment) <InfoTooltip text="Your new total debt-to-income ratio, including the new mortgage payment and other debts." /></span>
+                      <span className="font-semibold">{monthlyIncome > 0 ? `${(((refinanceResults.newMonthlyPayment + otherDebts) / monthlyIncome) * 100).toFixed(1)}%` : 'N/A'}</span>
+                    </div>
+                  </div>
+                </div>
+                {/* Refinance Disclaimers */}
+                <div className="text-xs text-blue-900 bg-blue-100 rounded p-2 mt-2">
+                  <strong>Disclaimers:</strong>
+                  <ul className="list-disc ml-5 mt-1 space-y-1">
+                    <li>Refinance estimates provided are based on self-reported data and current market conditions; actual rates and terms may vary.</li>
+                    <li>Consult with a qualified lender to determine if refinancing is suitable for your financial goals and to receive accurate quotes.</li>
+                    <li>Refinancing may result in higher overall finance charges over the life of the loan.</li>
+                    <li>A cash-out refinance involves increasing your mortgage debt and reduces your home equity. Carefully consider your ability to repay this debt.</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {/* Hide purchase-specific outputs in refinance mode */}
+            {loanMode !== 'refinance' && (
+              <>
+                {/* Existing purchase-specific outputs (e.g., Pre-Approval, Max Loan, Down Payment) go here. */}
+              </>
+            )}
           </div>
         </div>
       </div>
