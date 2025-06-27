@@ -558,17 +558,22 @@ const MortgageCalculator = ({
   // Helper to group amortization data by year for the graph, always up to full loan term
   function groupAmortizationByYearFullTerm(amortization, baseAmortization, loanTermYears, payoffYear) {
     const years = [];
-    for (let year = 1; year <= loanTermYears; year++) {
-      const monthIdx = year * 12 - 1;
-      const extra = amortization[Math.min(monthIdx, amortization.length - 1)] || { balance: 0 };
-      const base = baseAmortization[Math.min(monthIdx, baseAmortization.length - 1)] || { balance: 0 };
-      years.push({
-        year,
-        balance: year < payoffYear ? extra.balance : 0,
-        originalBalance: base.balance,
-        isPayoffYear: year === payoffYear
-      });
-    }
+    // Always show fixed 5-year increments: 1, 5, 10, 15, 20, 25, 30
+    const fixedYears = [1, 5, 10, 15, 20, 25, 30];
+    
+    fixedYears.forEach(year => {
+      if (year <= loanTermYears) {
+        const monthIdx = year * 12 - 1;
+        const extra = amortization[Math.min(monthIdx, amortization.length - 1)] || { balance: 0 };
+        const base = baseAmortization[Math.min(monthIdx, baseAmortization.length - 1)] || { balance: 0 };
+        years.push({
+          year,
+          balance: year < payoffYear ? extra.balance : 0,
+          originalBalance: base.balance,
+          isPayoffYear: year === payoffYear
+        });
+      }
+    });
     return years;
   }
 
@@ -1199,7 +1204,18 @@ const MortgageCalculator = ({
                           }}
                           label={{ value: 'Year', position: 'insideBottom', offset: -5, fontSize: 13 }}
                         />
-                        <YAxis tick={{ fontSize: 11 }} label={{ value: 'Balance', angle: -90, position: 'insideLeft', fontSize: 12 }} />
+                        <YAxis 
+                          tick={{ fontSize: 11 }} 
+                          tickFormatter={(value) => {
+                            if (value >= 1000000) {
+                              return `$${(value / 1000000).toFixed(1)}M`;
+                            } else if (value >= 1000) {
+                              return `$${(value / 1000).toFixed(0)}K`;
+                            }
+                            return `$${value.toLocaleString()}`;
+                          }}
+                          label={{ value: 'Balance', angle: -90, position: 'insideLeft', fontSize: 12 }} 
+                        />
                         <Tooltip formatter={(value) => formatCurrency(value)} labelFormatter={v => `Year ${v}`} />
                         <Line 
                           type="monotone" 
