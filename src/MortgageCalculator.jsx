@@ -1183,6 +1183,30 @@ const MortgageCalculator = ({
                   const biweeklyOnlyInterestSaved = baseInterest - biweeklyOnlyAmortization.totalInterest;
                   const biweeklyOnlyYearsSaved = (loanTerm * 12 - biweeklyOnlyAmortization.payoffMonth) / 12;
                   
+                  // Calculate monthly-only values (without additional payments) for consistent display
+                  const monthlyOnlyAmortization = generateAmortizationSchedule(
+                    loanAmount,
+                    monthlyInterestRate,
+                    numberOfPayments,
+                    principalAndInterest,
+                    0 // No additional payments
+                  );
+                  
+                  const monthlyOnlyTotalInterest = monthlyOnlyAmortization.totalInterest;
+                  const monthlyOnlyPayoffMonth = monthlyOnlyAmortization.payoffMonth;
+                  
+                  // Calculate monthly with additional payments for display
+                  const monthlyWithExtraAmortization = generateAmortizationSchedule(
+                    loanAmount,
+                    monthlyInterestRate,
+                    numberOfPayments,
+                    principalAndInterest,
+                    Number(extraPayment) // Monthly with additional payments
+                  );
+                  
+                  const monthlyWithExtraTotalInterest = monthlyWithExtraAmortization.totalInterest;
+                  const monthlyWithExtraPayoffMonth = monthlyWithExtraAmortization.payoffMonth;
+                  
                   return (
                     <div className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1206,26 +1230,26 @@ const MortgageCalculator = ({
                             </div>
                             <div className="flex justify-between">
                               <span className="text-slate-600">Total interest:</span>
-                              <span className="font-semibold">{formatCurrency(totalInterest)}</span>
+                              <span className="font-semibold">{formatCurrency(monthlyWithExtraTotalInterest)}</span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-slate-600 font-semibold">Total amount paid:</span>
-                              <span className="font-bold">{formatCurrency(loanAmount + totalInterest)}</span>
+                              <span className="font-bold">{formatCurrency(loanAmount + monthlyWithExtraTotalInterest)}</span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-slate-600">Payoff time:</span>
-                              <span className="font-semibold">{formatYearsMonths(payoffMonth)}</span>
+                              <span className="font-semibold">{formatYearsMonths(monthlyWithExtraPayoffMonth)}</span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-slate-600">Years saved:</span>
-                              <span className={`font-semibold ${(basePayoffMonth - payoffMonth) / 12 > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
-                                {(basePayoffMonth - payoffMonth) / 12 > 0 ? ((basePayoffMonth - payoffMonth) / 12).toFixed(1) : '0'} years
+                              <span className={`font-semibold ${(basePayoffMonth - monthlyWithExtraPayoffMonth) / 12 > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
+                                {(basePayoffMonth - monthlyWithExtraPayoffMonth) / 12 > 0 ? ((basePayoffMonth - monthlyWithExtraPayoffMonth) / 12).toFixed(1) : '0'} years
                               </span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-slate-600">Interest saved:</span>
-                              <span className={`font-semibold ${interestSaved > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
-                                {interestSaved > 0 ? formatCurrency(interestSaved) : '$0'}
+                              <span className={`font-semibold ${(baseInterest - monthlyWithExtraTotalInterest) > 0 ? 'text-teal-600' : 'text-slate-700'}`}>
+                                {(baseInterest - monthlyWithExtraTotalInterest) > 0 ? formatCurrency(baseInterest - monthlyWithExtraTotalInterest) : '$0'}
                               </span>
                             </div>
                           </div>
