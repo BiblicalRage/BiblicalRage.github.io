@@ -6,12 +6,12 @@ const RefinanceCalculator = () => {
   const [startingBalance, setStartingBalance] = useState(750000);
   const [startingTerm, setStartingTerm] = useState(30);
   const [yearsElapsed, setYearsElapsed] = useState(5);
-  const [currentRate, setCurrentRate] = useState(4.99);
+  const [currentRate, setCurrentRate] = useState(6.5);
   const [currentLoanBalance, setCurrentLoanBalance] = useState(615000);
   const [remainingTerm, setRemainingTerm] = useState(25);
   
   // New loan state
-  const [newRate, setNewRate] = useState(5.5);
+  const [newRate, setNewRate] = useState(6.5);
   const [newTerm, setNewTerm] = useState(30);
   const [closingCosts, setClosingCosts] = useState(5000);
   const [cashOutAmount, setCashOutAmount] = useState(0);
@@ -220,18 +220,13 @@ const RefinanceCalculator = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Interest Rate (%)</label>
-            <div className="relative">
-              <input 
-                type="number" 
-                step="0.1" 
-                value={newRate} 
-                onChange={e => setNewRate(Number(e.target.value))} 
-                className="input mb-2" 
-              />
-              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-slate-500">
-                Current market: ~5.5%
-              </span>
-            </div>
+            <input 
+              type="number" 
+              step="0.1" 
+              value={newRate} 
+              onChange={e => setNewRate(Number(e.target.value))} 
+              className="input mb-2" 
+            />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Term (Years)</label>
