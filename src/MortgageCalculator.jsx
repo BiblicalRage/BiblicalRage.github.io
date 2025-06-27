@@ -581,22 +581,21 @@ const MortgageCalculator = ({
   // Helper to group amortization data by year for the graph, always up to full loan term
   function groupAmortizationByYearFullTerm(amortization, baseAmortization, loanTermYears, payoffYear) {
     const years = [];
-    // Always show fixed 5-year increments: 1, 5, 10, 15, 20, 25, 30
-    const fixedYears = [1, 5, 10, 15, 20, 25, 30];
     
-    fixedYears.forEach(year => {
-      if (year <= loanTermYears) {
-        const monthIdx = year * 12 - 1;
-        const extra = amortization[Math.min(monthIdx, amortization.length - 1)] || { balance: 0 };
-        const base = baseAmortization[Math.min(monthIdx, baseAmortization.length - 1)] || { balance: 0 };
-        years.push({
-          year,
-          balance: year < payoffYear ? extra.balance : 0,
-          originalBalance: base.balance,
-          isPayoffYear: year === payoffYear
-        });
-      }
-    });
+    // Create data points for each year up to the full loan term
+    for (let year = 1; year <= loanTermYears; year++) {
+      const monthIdx = year * 12 - 1;
+      const extra = amortization[Math.min(monthIdx, amortization.length - 1)] || { balance: 0 };
+      const base = baseAmortization[Math.min(monthIdx, baseAmortization.length - 1)] || { balance: 0 };
+      
+      years.push({
+        year,
+        balance: extra.balance,
+        originalBalance: base.balance,
+        isPayoffYear: year === Math.ceil(payoffYear)
+      });
+    }
+    
     return years;
   }
 
@@ -1157,7 +1156,6 @@ const MortgageCalculator = ({
                   // 26 biweekly payments per year = 13 monthly payments worth
                   // This effectively adds 1 extra monthly payment per year
                   const extraMonthlyPaymentPerYear = principalAndInterest;
-                  const totalExtraPayments = Math.floor(loanTerm) * extraMonthlyPaymentPerYear;
                   
                   // Calculate new loan term with biweekly payments PLUS additional payments
                   const biweeklyAmortization = generateAmortizationSchedule(
@@ -1171,7 +1169,7 @@ const MortgageCalculator = ({
                   const biweeklyPayoffMonth = biweeklyAmortization.payoffMonth;
                   const biweeklyTotalInterest = biweeklyAmortization.totalInterest;
                   const biweeklyYearsSaved = (loanTerm * 12 - biweeklyPayoffMonth) / 12;
-                  const biweeklyInterestSaved = totalInterest - biweeklyTotalInterest;
+                  const biweeklyInterestSaved = baseInterest - biweeklyTotalInterest;
                   
                   // Calculate biweekly-only impact (without additional payments) for comparison
                   const biweeklyOnlyAmortization = generateAmortizationSchedule(
@@ -1182,7 +1180,7 @@ const MortgageCalculator = ({
                     extraMonthlyPaymentPerYear / 12 // Just biweekly extra, no additional payments
                   );
                   
-                  const biweeklyOnlyInterestSaved = totalInterest - biweeklyOnlyAmortization.totalInterest;
+                  const biweeklyOnlyInterestSaved = baseInterest - biweeklyOnlyAmortization.totalInterest;
                   const biweeklyOnlyYearsSaved = (loanTerm * 12 - biweeklyOnlyAmortization.payoffMonth) / 12;
                   
                   return (
@@ -1330,18 +1328,10 @@ const MortgageCalculator = ({
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis
                           dataKey="year"
-                          tick={({ x, y, payload }) => (
-                            <text
-                              x={x}
-                              y={y + 10}
-                              textAnchor="middle"
-                              fontSize={12}
-                              fontWeight={400}
-                              fill="#222"
-                            >
-                              {payload.value}
-                            </text>
-                          )}
+                          type="number"
+                          domain={[1, loanTerm]}
+                          ticks={[1, 5, 10, 15, 20, 25, 30].filter(tick => tick <= loanTerm)}
+                          tick={{ fontSize: 12, fontWeight: 400, fill: "#222" }}
                           label={{ value: 'Year', position: 'insideBottom', offset: -5, fontSize: 13 }}
                         />
                         <YAxis 
