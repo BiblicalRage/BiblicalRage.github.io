@@ -56,7 +56,7 @@ const App = () => {
   const [mainTaxRate, setMainTaxRate] = useState(0.500780 + 0.3051 + 0.1467 + 1.1799);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [propertyTaxRate, setPropertyTaxRate] = useState(1.8);
-  const [insuranceRate, setInsuranceRate] = useState(0.5);
+  const [insuranceRate, setInsuranceRate] = useState(1.0);
   const [pmiRate, setPmiRate] = useState(0.5);
   const [hoa, setHoa] = useState(0);
   const [cityTaxRate, setCityTaxRate] = useState(0.500780);
