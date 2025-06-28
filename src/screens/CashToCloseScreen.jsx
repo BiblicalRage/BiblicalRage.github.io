@@ -52,11 +52,11 @@ const CashToCloseScreen = ({ setCurrentView }) => {
       recordingFeesTaxes: homePrice * 0.000337,
       
       // F. Prepaids
-      homeownersInsurance12mo: homePrice * 0.007407,
+      homeownersInsurance12mo: homePrice * 0.01,
       prepaidInterest: homePrice * 0.001459,
       
       // G. Initial Escrow Payment at Closing
-      homeownersInsurance3mo: homePrice * 0.002222,
+      homeownersInsurance3mo: homePrice * 0.003,
       cityPropertyTax3mo: homePrice * 0.004722,
       
       // H. Other
