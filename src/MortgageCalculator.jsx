@@ -809,10 +809,6 @@ const MortgageCalculator = ({
                   style={{ fontWeight: 600 }}
                 />
               </div>
-              <div className="flex justify-between text-xs text-slate-400 mt-1">
-                <span>$50,000</span>
-                <span>$2,000,000</span>
-              </div>
             </div>
             {/* Down Payment */}
             <div>
@@ -830,27 +826,29 @@ const MortgageCalculator = ({
                   onChange={e => handleDownPaymentChange(Number(e.target.value))}
                   className="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer accent-[var(--color-accent)]"
                 />
-                <FormattedNumberInput
-                  value={downPayment}
-                  onChange={handleDownPaymentChange}
-                  min={0}
-                  max={homePrice}
-                  step={1000}
-                  className="input w-full md:w-32 text-base md:text-lg text-right rounded-full border-2 border-[var(--color-accent)]"
-                  style={{ fontWeight: 600 }}
-                />
-                <div className="flex items-center gap-1">
-                  <span className="text-slate-500 font-semibold">(</span>
+                <div className="flex items-center gap-2 w-full md:w-auto">
                   <FormattedNumberInput
-                    value={downPaymentPct}
-                    onChange={handleDownPaymentPctChange}
+                    value={downPayment}
+                    onChange={handleDownPaymentChange}
                     min={0}
-                    max={100}
-                    step={0.1}
-                    className="w-16 text-base md:text-lg text-right border-none bg-transparent text-slate-500 font-semibold focus:outline-none"
+                    max={homePrice}
+                    step={1000}
+                    className="input w-full md:w-32 text-base md:text-lg text-right rounded-full border-2 border-[var(--color-accent)]"
                     style={{ fontWeight: 600 }}
                   />
-                  <span className="text-slate-500 font-semibold">%)</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-slate-500 font-semibold">(</span>
+                    <FormattedNumberInput
+                      value={downPaymentPct}
+                      onChange={handleDownPaymentPctChange}
+                      min={0}
+                      max={100}
+                      step={0.1}
+                      className="w-16 text-base md:text-lg text-right border-none bg-transparent text-slate-500 font-semibold focus:outline-none"
+                      style={{ fontWeight: 600 }}
+                    />
+                    <span className="text-slate-500 font-semibold">%)</span>
+                  </div>
                 </div>
               </div>
             </div>

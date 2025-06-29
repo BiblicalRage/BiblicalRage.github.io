@@ -320,7 +320,7 @@ const App = () => {
       </header>
 
       {/* Enhanced Navigation */}
-      <nav className="sticky top-0 z-40 border-b border-slate-200 shadow-sm flex justify-center bg-white/95 backdrop-blur-sm">
+      <nav className="md:sticky md:top-0 fixed bottom-0 md:bottom-auto left-0 right-0 z-40 border-t md:border-b border-slate-200 shadow-sm flex justify-center bg-white/95 backdrop-blur-sm">
         <div className="w-full px-2 md:px-4 flex justify-center">
           <div
             className="flex flex-row justify-center items-center py-3 md:py-3 gap-2 md:gap-3"
@@ -410,7 +410,7 @@ const App = () => {
       </nav>
 
       {/* Main Content Area */}
-      <main className="flex-grow max-w-7xl w-full mx-auto px-3 md:px-4 py-4 md:py-6">
+      <main className="flex-grow max-w-7xl w-full mx-auto px-3 md:px-4 py-4 md:py-6 pb-20 md:pb-6">
         {currentView === 'home' && (
           <HomeScreen
             showCustomModal={showCustomModal}
