@@ -624,23 +624,49 @@ const MortgageCalculator = ({
             <div className="bg-white rounded-2xl shadow p-3 md:p-4 border border-slate-100">
               <button
                 onClick={() => setShowDTI(!showDTI)}
-                className="w-full transition duration-200 font-semibold text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-none flex items-center justify-center relative md:rounded-[18px] md:px-[0.75em] md:py-[0.75em] md:text-[1.05rem]"
+                className="w-full transition duration-200 font-semibold text-xs md:text-sm focus:outline-none shadow-none flex items-center justify-center relative md:rounded-[18px] md:px-[0.55em] md:py-[0.55em] md:text-[1.05rem]"
                 style={{
                   borderRadius: '14px',
                   padding: '0.6em 1.2em',
-                  background: 'linear-gradient(90deg, #80dac1 0%, #5cb0ec 100%)',
+                  background: 'linear-gradient(135deg, #8ee4d0 0%, #6bb8f0 50%, #5cb0ec 100%)',
                   color: '#fff',
-                  boxShadow: '0 2px 8px 0 rgba(0,0,0,0.08)',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.05)',
                   margin: 0,
-                  border: '1.5px solid #000',
+                  border: '1.5px solid rgba(0,0,0,0.15)',
                   outline: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 600,
-                  fontSize: '0.95rem',
-                  transition: 'transform 0.15s',
+                  fontSize: '0.9rem',
+                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                   whiteSpace: 'nowrap',
+                  minHeight: '48px',
+                  minWidth: '48px',
+                  position: 'relative',
+                  transform: 'translateY(0)',
+                  cursor: 'pointer',
+                  WebkitTapHighlightColor: 'transparent',
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.1)';
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #8ee4d0 0%, #6bb8f0 50%, #5cb0ec 100%)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.05)';
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #8ee4d0 0%, #6bb8f0 50%, #5cb0ec 100%)';
+                }}
+                onMouseDown={(e) => {
+                  e.currentTarget.style.transform = 'translateY(1px)';
+                  e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(0,0,0,0.1)';
+                }}
+                onMouseUp={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.05)';
                 }}
               >
                 Debt-to-Income Ratio Calculator
@@ -914,23 +940,49 @@ const MortgageCalculator = ({
             <div className="bg-white rounded-2xl shadow p-4 border border-slate-100">
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="w-full transition duration-200 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-none flex items-center justify-center relative"
+                className="w-full transition duration-200 font-semibold text-sm focus:outline-none shadow-none flex items-center justify-center relative md:rounded-[18px] md:px-[0.55em] md:py-[0.55em] md:text-[1.05rem]"
                 style={{
-                  borderRadius: '18px',
-                  padding: '0.75em 1.5em',
-                  background: 'linear-gradient(90deg, #80dac1 0%, #5cb0ec 100%)',
+                  borderRadius: '14px',
+                  padding: '0.6em 1.2em',
+                  background: 'linear-gradient(135deg, #8ee4d0 0%, #6bb8f0 50%, #5cb0ec 100%)',
                   color: '#fff',
-                  boxShadow: '0 2px 8px 0 rgba(0,0,0,0.08)',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.05)',
                   margin: 0,
-                  border: '1.5px solid #000',
+                  border: '1.5px solid rgba(0,0,0,0.15)',
                   outline: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 600,
-                  fontSize: '1.05rem',
-                  transition: 'transform 0.15s',
+                  fontSize: '0.9rem',
+                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                   whiteSpace: 'nowrap',
+                  minHeight: '48px',
+                  minWidth: '48px',
+                  position: 'relative',
+                  transform: 'translateY(0)',
+                  cursor: 'pointer',
+                  WebkitTapHighlightColor: 'transparent',
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.1)';
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #8ee4d0 0%, #6bb8f0 50%, #5cb0ec 100%)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.05)';
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #8ee4d0 0%, #6bb8f0 50%, #5cb0ec 100%)';
+                }}
+                onMouseDown={(e) => {
+                  e.currentTarget.style.transform = 'translateY(1px)';
+                  e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(0,0,0,0.1)';
+                }}
+                onMouseUp={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.05)';
                 }}
               >
                 Show Advanced Options
@@ -1404,16 +1456,16 @@ const MortgageCalculator = ({
                   </div>
                 ) : (
                   /* Schedule Table */
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-xs text-slate-700 border border-slate-200 rounded-lg overflow-hidden">
+                  <div className="overflow-x-auto rounded-lg border border-slate-200">
+                    <table className="w-full text-xs text-slate-700">
                       <thead>
                         <tr className="bg-slate-50 border-b border-slate-200">
-                          <th className="text-left py-2 px-2 font-semibold text-slate-800 w-16">Month</th>
-                          <th className="text-right py-2 px-2 font-semibold text-slate-800 w-24">Balance</th>
-                          <th className="text-right py-2 px-2 font-semibold text-slate-800 w-20">Payment</th>
-                          <th className="text-right py-2 px-2 font-semibold text-slate-800 w-20">Interest</th>
-                          <th className="text-right py-2 px-2 font-semibold text-slate-800 w-20">Principal</th>
-                          <th className="text-right py-2 px-2 font-semibold text-slate-800 w-24">End Balance</th>
+                          <th className="text-center py-2 px-1 md:px-2 font-semibold text-slate-800 text-xs md:text-xs">Month</th>
+                          <th className="text-center py-2 px-1 md:px-2 font-semibold text-slate-800 text-xs md:text-xs">Balance</th>
+                          <th className="text-center py-2 px-1 md:px-2 font-semibold text-slate-800 text-xs md:text-xs">Payment</th>
+                          <th className="text-center py-2 px-1 md:px-2 font-semibold text-slate-800 text-xs md:text-xs">Interest</th>
+                          <th className="text-center py-2 px-1 md:px-2 font-semibold text-slate-800 text-xs md:text-xs">Principal</th>
+                          <th className="text-center py-2 px-1 md:px-2 font-semibold text-slate-800 text-xs md:text-xs">End Balance</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1421,21 +1473,16 @@ const MortgageCalculator = ({
                           <tr key={index} className={`border-b border-slate-100 hover:bg-slate-50 transition-colors ${
                             month.month % 12 === 0 ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
                           }`}>
-                            <td className={`py-2 px-2 font-medium ${
+                            <td className={`py-2 px-1 md:px-2 font-medium text-xs md:text-xs text-center ${
                               month.month % 12 === 0 ? 'text-blue-700 font-semibold' : 'text-slate-700'
                             }`}>
                               {month.month}
-                              {month.month % 12 === 0 && (
-                                <span className="ml-1 text-xs text-blue-600 font-normal">
-                                  (Y{Math.floor(month.month / 12)})
-                                </span>
-                              )}
                             </td>
-                            <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(month.balance + month.principal)}</td>
-                            <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(month.payment)}</td>
-                            <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(month.interest)}</td>
-                            <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(month.principal)}</td>
-                            <td className="text-right py-2 px-2 font-mono text-slate-700">{formatCurrency(month.balance)}</td>
+                            <td className="text-center py-2 px-1 md:px-2 font-mono text-slate-700 text-xs md:text-xs">{formatCurrency(month.balance + month.principal)}</td>
+                            <td className="text-center py-2 px-1 md:px-2 font-mono text-slate-700 text-xs md:text-xs">{formatCurrency(month.payment)}</td>
+                            <td className="text-center py-2 px-1 md:px-2 font-mono text-slate-700 text-xs md:text-xs">{formatCurrency(month.interest)}</td>
+                            <td className="text-center py-2 px-1 md:px-2 font-mono text-slate-700 text-xs md:text-xs">{formatCurrency(month.principal)}</td>
+                            <td className="text-center py-2 px-1 md:px-2 font-mono text-slate-700 text-xs md:text-xs">{formatCurrency(month.balance)}</td>
                           </tr>
                         ))}
                       </tbody>

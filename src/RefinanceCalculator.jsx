@@ -184,7 +184,7 @@ const RefinanceCalculator = () => {
   // New loan state
   const [newRate, setNewRate] = useState(6.5);
   const [newTerm, setNewTerm] = useState(30);
-  const [closingCosts, setClosingCosts] = useState(5000);
+  const [closingCosts, setClosingCosts] = useState(9000);
   const [cashOutAmount, setCashOutAmount] = useState(0);
   const [isCashOut, setIsCashOut] = useState(false);
 
@@ -506,9 +506,9 @@ const RefinanceCalculator = () => {
                 </label>
                 <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3">
                   <input
-                    min={0}
-                    max={10000}
-                    step={100}
+                    min={Math.round(newLoanAmount * 0.02)}
+                    max={Math.round(newLoanAmount * 0.06)}
+                    step={Math.round(newLoanAmount * 0.001)}
                     className="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer accent-[var(--color-primary)]"
                     type="range"
                     value={closingCosts}
@@ -517,14 +517,14 @@ const RefinanceCalculator = () => {
                   <FormattedNumberInput
                     value={closingCosts}
                     onChange={setClosingCosts}
-                    min={0}
-                    max={10000}
-                    step={100}
+                    min={Math.round(newLoanAmount * 0.02)}
+                    max={Math.round(newLoanAmount * 0.06)}
+                    step={Math.round(newLoanAmount * 0.001)}
                     className="input w-full md:w-32 text-base md:text-lg text-right rounded-full border-2 border-[var(--color-primary)]"
                     style={{ fontWeight: 600 }}
                   />
                 </div>
-                <p className="text-xs text-slate-500 mt-1">Typical range: $2,000 - $6,000</p>
+                <p className="text-xs text-slate-500 mt-1">Typical range: 2-6% of loan amount</p>
               </div>
             </div>
           </div>

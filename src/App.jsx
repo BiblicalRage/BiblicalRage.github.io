@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { useState } from 'react';
 import firstKeyLogo from './assets/FirstKey.png';
 import HomeScreen from './screens/HomeScreen.jsx';
 import DocumentsScreen from './screens/DocumentsScreen.jsx';
@@ -47,8 +47,8 @@ const App = () => {
   const [optionalMessage, setOptionalMessage] = useState('');
 
   // Mortgage Calculator state (lifted up to persist across tabs)
-  const [homePrice, setHomePrice] = useState(330000);
-  const [downPayment, setDownPayment] = useState(66000);
+  const [homePrice, setHomePrice] = useState(450000);
+  const [downPayment, setDownPayment] = useState(90000);
   const [downPaymentPct, setDownPaymentPct] = useState(20);
   const [loanTerm, setLoanTerm] = useState(30);
   const [interestRate, setInterestRate] = useState(6.5);
@@ -101,17 +101,18 @@ const App = () => {
 
   // Auth state
   const [user, setUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [onAuthSuccessCallback, setOnAuthSuccessCallback] = useState(null);
 
-  React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setAuthLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+  // Temporarily disabled Firebase authentication for development
+  // React.useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+  //     setUser(firebaseUser);
+  //     setAuthLoading(false);
+  //   });
+  //   return () => unsubscribe();
+  // }, []);
 
   // Helper to open Auth modal and run a callback after login
   const requireLogin = (callback) => {
@@ -320,7 +321,7 @@ const App = () => {
       </header>
 
       {/* Enhanced Navigation */}
-      <nav className="md:sticky md:top-0 fixed bottom-0 md:bottom-auto left-0 right-0 z-40 border-t md:border-b border-slate-200 shadow-sm flex justify-center bg-white/95 backdrop-blur-sm">
+      <nav className="sticky top-0 z-40 border-b border-slate-200 shadow-sm flex justify-center bg-white/95 backdrop-blur-sm">
         <div className="w-full px-2 md:px-4 flex justify-center">
           <div
             className="flex flex-row justify-center items-center py-3 md:py-3 gap-2 md:gap-3"
@@ -377,32 +378,71 @@ const App = () => {
             ].map((tab, index) => (
               <button
                 key={tab.key}
-                className={`transition duration-200 font-semibold text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-none flex items-center justify-center relative md:rounded-[18px] md:px-[0.55em] md:py-[0.55em] md:text-[1.05rem]`
+                className={`transition duration-200 font-semibold text-xs md:text-sm focus:outline-none shadow-none flex items-center justify-center relative md:rounded-[18px] md:px-[0.55em] md:py-[0.55em] md:text-[1.05rem]`
                   + (currentView === tab.key ? ' z-10 scale-105' : ' opacity-90 hover:opacity-100')
                 }
                 style={{
                   borderRadius: '14px',
                   padding: '0.6em 1.2em',
-                  background: 'linear-gradient(90deg, #80dac1 0%, #5cb0ec 100%)',
+                  background: currentView === tab.key 
+                    ? 'linear-gradient(135deg, #80dac1 0%, #5cb0ec 50%, #4a9fd8 100%)'
+                    : 'linear-gradient(135deg, #8ee4d0 0%, #6bb8f0 50%, #5cb0ec 100%)',
                   color: '#fff',
-                  boxShadow: currentView === tab.key ? '0 2px 8px 0 rgba(0,0,0,0.08)' : 'none',
+                  boxShadow: currentView === tab.key 
+                    ? '0 4px 12px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.1)'
+                    : '0 2px 8px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.05)',
                   margin: 0,
-                  border: '1.5px solid #000',
+                  border: currentView === tab.key 
+                    ? '2px solid rgba(0,0,0,0.2)'
+                    : '1.5px solid rgba(0,0,0,0.15)',
                   outline: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 600,
                   fontSize: '0.9rem',
-                  transition: 'transform 0.15s',
+                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                   whiteSpace: 'nowrap',
                   minHeight: '48px',
                   minWidth: '48px',
+                  position: 'relative',
+                  transform: currentView === tab.key ? 'translateY(-1px)' : 'translateY(0)',
+                  cursor: 'pointer',
+                  WebkitTapHighlightColor: 'transparent',
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none',
+                }}
+                onMouseEnter={(e) => {
+                  if (currentView !== tab.key) {
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.1)';
+                    e.currentTarget.style.background = 'linear-gradient(135deg, #8ee4d0 0%, #6bb8f0 50%, #5cb0ec 100%)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (currentView !== tab.key) {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.05)';
+                    e.currentTarget.style.background = 'linear-gradient(135deg, #8ee4d0 0%, #6bb8f0 50%, #5cb0ec 100%)';
+                  }
+                }}
+                onMouseDown={(e) => {
+                  e.currentTarget.style.transform = 'translateY(1px)';
+                  e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(0,0,0,0.1)';
+                }}
+                onMouseUp={(e) => {
+                  if (currentView === tab.key) {
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.1)';
+                  } else {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.05)';
+                  }
                 }}
                 onClick={() => setCurrentView(tab.key)}
               >
-                {tab.icon}
-                <span className="hidden md:inline">{tab.label}</span>
+                <span style={{ transform: 'none', boxShadow: 'none' }}>{tab.icon}</span>
+                <span className="hidden md:inline" style={{ transform: 'none', boxShadow: 'none' }}>{tab.label}</span>
               </button>
             ))}
           </div>
@@ -410,7 +450,7 @@ const App = () => {
       </nav>
 
       {/* Main Content Area */}
-      <main className="flex-grow max-w-7xl w-full mx-auto px-3 md:px-4 py-4 md:py-6 pb-20 md:pb-6">
+      <main className="flex-grow max-w-7xl w-full mx-auto px-3 md:px-4 py-4 md:py-6">
         {currentView === 'home' && (
           <HomeScreen
             showCustomModal={showCustomModal}

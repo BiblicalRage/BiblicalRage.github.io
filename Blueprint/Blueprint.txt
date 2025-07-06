@@ -1,4 +1,4 @@
-FirstKey App: Comprehensive Design Blueprint (Version 2.7 - Document Sharing Added)
+.FirstKey App: Comprehensive Design Blueprint (Version 2.7 - Document Sharing Added)
 (Previous sections 1 through 2.1 remain as in Version 2.6)
 2.2. Phase 1: Streamlined Expanded Minimum Viable Product (MVP) - Core Readiness & Email-Based Professional Connections
  * Goal: Validate core value, acquire initial users, and establish a foundational, user-controlled platform for secure connections with multiple MLOs and Realtors via email notification.

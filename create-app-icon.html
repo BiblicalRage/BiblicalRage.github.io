@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FirstKey App Icon Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        .icon-container {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+        .icon {
+            background: white;
+            border-radius: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 2px solid #e5e7eb;
+        }
+        .icon img {
+            max-width: 60%;
+            max-height: 60%;
+            object-fit: contain;
+        }
+        .size-label {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+        .download-btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #5cb0ec;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .download-btn:hover {
+            background: #4a9fd8;
+        }
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <h2>FirstKey App Icon Generator</h2>
+        <p>This page generates properly sized app icons with the FirstKey logo centered and not stretched.</p>
+        <p><strong>Instructions:</strong></p>
+        <ol>
+            <li>Right-click on each icon below</li>
+            <li>Select "Save image as..."</li>
+            <li>Save with the appropriate filename (e.g., "firstkey-icon-180x180.png")</li>
+            <li>Replace the existing FirstKey.png file with the 180x180 version</li>
+        </ol>
+    </div>
+
+    <div class="icon-container">
+        <div class="icon" style="width: 32px; height: 32px;">
+            <img src="src/assets/FirstKey.ico.png" alt="FirstKey Logo">
+        </div>
+        <div class="size-label">32x32 (Favicon)</div>
+        <button class="download-btn" onclick="downloadIcon(32)">Download</button>
+    </div>
+
+    <div class="icon-container">
+        <div class="icon" style="width: 152px; height: 152px;">
+            <img src="src/assets/FirstKey.ico.png" alt="FirstKey Logo">
+        </div>
+        <div class="size-label">152x152 (Apple Touch Icon)</div>
+        <button class="download-btn" onclick="downloadIcon(152)">Download</button>
+    </div>
+
+    <div class="icon-container">
+        <div class="icon" style="width: 180px; height: 180px;">
+            <img src="src/assets/FirstKey.ico.png" alt="FirstKey Logo">
+        </div>
+        <div class="size-label">180x180 (Apple Touch Icon HD)</div>
+        <button class="download-btn" onclick="downloadIcon(180)">Download</button>
+    </div>
+
+    <div class="icon-container">
+        <div class="icon" style="width: 192px; height: 192px;">
+            <img src="src/assets/FirstKey.ico.png" alt="FirstKey Logo">
+        </div>
+        <div class="size-label">192x192 (Android Icon)</div>
+        <button class="download-btn" onclick="downloadIcon(192)">Download</button>
+    </div>
+
+    <div class="icon-container">
+        <div class="icon" style="width: 512px; height: 512px;">
+            <img src="src/assets/FirstKey.ico.png" alt="FirstKey Logo">
+        </div>
+        <div class="size-label">512x512 (Large Icon)</div>
+        <button class="download-btn" onclick="downloadIcon(512)">Download</button>
+    </div>
+
+    <script>
+        function downloadIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            // Draw white background
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, size, size);
+
+            // Load and draw logo
+            const img = new Image();
+            img.onload = function() {
+                // Calculate logo size (60% of icon size)
+                const logoSize = size * 0.6;
+                const logoX = (size - logoSize) / 2;
+                const logoY = (size - logoSize) / 2;
+                
+                ctx.drawImage(img, logoX, logoY, logoSize, logoSize);
+                
+                // Download the image
+                const link = document.createElement('a');
+                link.download = `firstkey-icon-${size}x${size}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            };
+            img.src = 'src/assets/FirstKey.ico.png';
+        }
+    </script>
+</body>
+</html> 
